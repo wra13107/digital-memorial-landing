@@ -17,15 +17,13 @@ import { useState } from "react";
  * Typography:
  * - Headings: Spectral (serif) - Tradition, History
  * - Body: Manrope (sans-serif) - Technology, Readability
+ * 
+ * Animations: AOS (Animate On Scroll) with fade-up effect
  */
 
 export default function Home() {
   const [checkEmail, setCheckEmail] = useState("");
   const [checkName, setCheckName] = useState("");
-  const [stats] = useState({
-    memorials: 15000,
-    countries: 14,
-  });
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -43,7 +41,7 @@ export default function Home() {
 
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center">
-          <div className="max-w-2xl mx-auto space-y-6 animate-fade-up">
+          <div className="max-w-2xl mx-auto space-y-6" data-aos="fade-up" data-aos-duration="800">
             <h1 className="text-5xl md:text-6xl font-bold text-[#2C353D] leading-tight">
               Камень хранит имя.
               <br />
@@ -55,7 +53,7 @@ export default function Home() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <Button
                 size="lg"
                 className="bg-[#C49F64] hover:bg-[#b8934f] text-white font-semibold shadow-lg hover:shadow-xl transition-all"
@@ -72,7 +70,7 @@ export default function Home() {
               </Button>
             </div>
 
-            <p className="text-sm text-[#6E7A85] pt-4">
+            <p className="text-sm text-[#6E7A85] pt-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
               Бесплатно. Без привязки карты.
             </p>
           </div>
@@ -82,13 +80,13 @@ export default function Home() {
       {/* ============ BLOCK 2: BEFORE/AFTER CONTRAST ============ */}
       <section className="py-20 px-4 bg-[#FDFBF7]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16" data-aos="fade-up" data-aos-duration="800">
             От памятника к памяти
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
             {/* Before */}
-            <div className="space-y-4 animate-fade-up">
+            <div className="space-y-4" data-aos="fade-up" data-aos-duration="800">
               <div className="relative overflow-hidden rounded-lg shadow-md">
                 <img
                   src="/images/before-after-memorial.jpg"
@@ -103,7 +101,7 @@ export default function Home() {
             </div>
 
             {/* After */}
-            <div className="space-y-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="space-y-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <div className="relative overflow-hidden rounded-lg shadow-lg border-2 border-[#C49F64]">
                 <img
                   src="/images/before-after-memorial.jpg"
@@ -123,16 +121,16 @@ export default function Home() {
       {/* ============ BLOCK 3: THREE SIMPLE STEPS ============ */}
       <section className="py-20 px-4 bg-[#F0F4F8]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-4" data-aos="fade-up" data-aos-duration="800">
             Три простых шага
           </h2>
-          <p className="text-center text-[#6E7A85] text-lg mb-16 max-w-2xl mx-auto">
+          <p className="text-center text-[#6E7A85] text-lg mb-16 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
             Создание цифровой страницы памяти займет всего несколько минут
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <div className="text-center space-y-4 animate-fade-up">
+            <div className="text-center space-y-4" data-aos="fade-up" data-aos-duration="800">
               <div className="mx-auto w-48 h-48 rounded-lg overflow-hidden shadow-md mb-6">
                 <img
                   src="/images/three-steps-illustration.jpg"
@@ -147,7 +145,7 @@ export default function Home() {
             </div>
 
             {/* Step 2 */}
-            <div className="text-center space-y-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="text-center space-y-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <div className="mx-auto w-48 h-48 rounded-lg overflow-hidden shadow-md mb-6">
                 <img
                   src="/images/three-steps-illustration.jpg"
@@ -162,7 +160,7 @@ export default function Home() {
             </div>
 
             {/* Step 3 */}
-            <div className="text-center space-y-4 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+            <div className="text-center space-y-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
               <div className="mx-auto w-48 h-48 rounded-lg overflow-hidden shadow-md mb-6">
                 <img
                   src="/images/three-steps-illustration.jpg"
@@ -178,7 +176,7 @@ export default function Home() {
           </div>
 
           {/* CTA Button */}
-          <div className="text-center mt-12">
+          <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
             <Button
               size="lg"
               className="bg-[#C49F64] hover:bg-[#b8934f] text-white font-semibold shadow-lg"
@@ -193,13 +191,13 @@ export default function Home() {
       {/* ============ BLOCK 4: DIGITAL CAPSULE FEATURES ============ */}
       <section className="py-20 px-4 bg-[#FDFBF7]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16" data-aos="fade-up" data-aos-duration="800">
             Цифровая капсула памяти
           </h2>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Smartphone Image */}
-            <div className="flex justify-center animate-fade-up">
+            <div className="flex justify-center" data-aos="fade-up" data-aos-duration="800">
               <div className="relative">
                 <img
                   src="/images/smartphone-memorial-interface.jpg"
@@ -210,7 +208,7 @@ export default function Home() {
             </div>
 
             {/* Features */}
-            <div className="space-y-8 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="space-y-8" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               {/* Feature 1: Voice */}
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
@@ -264,7 +262,7 @@ export default function Home() {
               </div>
 
               {/* Audio Link */}
-              <div className="pt-4">
+              <div className="pt-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
                 <button className="text-[#C49F64] font-semibold hover:underline flex items-center gap-2">
                   <Play className="w-4 h-4" />
                   Послушать пример аудиозаписи
@@ -280,7 +278,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Image */}
-            <div className="flex justify-center order-2 lg:order-1 animate-fade-up">
+            <div className="flex justify-center order-2 lg:order-1" data-aos="fade-up" data-aos-duration="800">
               <img
                 src="/images/nameplate-macro.jpg"
                 alt="Premium nameplate macro photography"
@@ -289,7 +287,7 @@ export default function Home() {
             </div>
 
             {/* Content */}
-            <div className="space-y-6 order-1 lg:order-2 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="space-y-6 order-1 lg:order-2" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <h2 className="text-4xl md:text-5xl font-bold text-[#2C353D]">
                 Ювелирное изделие, а не просто код
               </h2>
@@ -316,7 +314,7 @@ export default function Home() {
               </div>
 
               {/* Name Check Form */}
-              <div className="bg-white rounded-lg p-6 shadow-md border border-[#F0F4F8]">
+              <div className="bg-white rounded-lg p-6 shadow-md border border-[#F0F4F8]" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
                 <p className="text-sm font-semibold text-[#6E7A85] mb-3">
                   Проверьте, свободно ли красивое имя ссылки
                 </p>
@@ -344,12 +342,12 @@ export default function Home() {
       {/* ============ BLOCK 6: SOCIAL PROOF & STATISTICS ============ */}
       <section className="py-20 px-4 bg-[#FDFBF7]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16" data-aos="fade-up" data-aos-duration="800">
             Нам доверяют семьи по всему миру
           </h2>
 
           {/* Testimonial */}
-          <div className="max-w-3xl mx-auto mb-16 text-center animate-fade-up">
+          <div className="max-w-3xl mx-auto mb-16 text-center" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
             <blockquote className="text-2xl md:text-3xl text-[#2C353D] font-light italic mb-6 leading-relaxed">
               "Я живу в другой стране, но теперь я могу "прийти" к папе, посмотреть его фото и показать его внукам. Это дает мне чувство покоя."
             </blockquote>
@@ -358,13 +356,13 @@ export default function Home() {
 
           {/* Statistics */}
           <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-            <div className="text-center p-8 bg-[#F0F4F8] rounded-lg animate-fade-up">
+            <div className="text-center p-8 bg-[#F0F4F8] rounded-lg" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
               <p className="text-5xl md:text-6xl font-bold text-[#C49F64] mb-2">
                 15,000+
               </p>
               <p className="text-lg text-[#6E7A85]">мемориалов создано</p>
             </div>
-            <div className="text-center p-8 bg-[#F0F4F8] rounded-lg animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="text-center p-8 bg-[#F0F4F8] rounded-lg" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
               <p className="text-5xl md:text-6xl font-bold text-[#C49F64] mb-2">
                 14
               </p>
@@ -377,13 +375,13 @@ export default function Home() {
       {/* ============ BLOCK 7: PRICING ============ */}
       <section className="py-20 px-4 bg-[#F0F4F8]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16" data-aos="fade-up" data-aos-duration="800">
             Выберите подходящий тариф
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Plan 1: Subscription */}
-            <div className="bg-white rounded-lg p-8 shadow-md border border-[#E8E8E8] animate-fade-up">
+            <div className="bg-white rounded-lg p-8 shadow-md border border-[#E8E8E8]" data-aos="fade-up" data-aos-duration="800">
               <h3 className="text-2xl font-bold text-[#2C353D] mb-4">Подписка</h3>
               <p className="text-[#6E7A85] mb-6">Для тех, кто хочет попробовать</p>
               
@@ -414,7 +412,7 @@ export default function Home() {
             </div>
 
             {/* Plan 2: Legacy (Featured) */}
-            <div className="bg-gradient-to-br from-[#C49F64]/10 to-[#C49F64]/5 rounded-lg p-8 shadow-lg border-2 border-[#C49F64] relative animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="bg-gradient-to-br from-[#C49F64]/10 to-[#C49F64]/5 rounded-lg p-8 shadow-lg border-2 border-[#C49F64] relative" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <div className="absolute -top-4 left-6 bg-[#C49F64] text-white px-4 py-1 rounded-full text-sm font-semibold">
                 Выбор 95% семей
               </div>
@@ -459,13 +457,13 @@ export default function Home() {
       {/* ============ BLOCK 8: FAQ & GUARANTEES ============ */}
       <section className="py-20 px-4 bg-[#FDFBF7]">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center text-[#2C353D] mb-16" data-aos="fade-up" data-aos-duration="800">
             Гарантии и безопасность
           </h2>
 
           <div className="space-y-6">
             {/* FAQ Item 1 */}
-            <div className="bg-white rounded-lg p-6 shadow-md border border-[#E8E8E8] animate-fade-up">
+            <div className="bg-white rounded-lg p-6 shadow-md border border-[#E8E8E8]" data-aos="fade-up" data-aos-duration="800">
               <div className="flex gap-4">
                 <Lock className="w-6 h-6 text-[#C49F64] flex-shrink-0 mt-1" />
                 <div className="flex-1">
@@ -480,7 +478,7 @@ export default function Home() {
             </div>
 
             {/* FAQ Item 2 */}
-            <div className="bg-white rounded-lg p-6 shadow-md border border-[#E8E8E8] animate-fade-up" style={{ animationDelay: "0.1s" }}>
+            <div className="bg-white rounded-lg p-6 shadow-md border border-[#E8E8E8]" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
               <div className="flex gap-4">
                 <AlertCircle className="w-6 h-6 text-[#C49F64] flex-shrink-0 mt-1" />
                 <div className="flex-1">
@@ -495,7 +493,7 @@ export default function Home() {
             </div>
 
             {/* FAQ Item 3 */}
-            <div className="bg-white rounded-lg p-6 shadow-md border border-[#E8E8E8] animate-fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="bg-white rounded-lg p-6 shadow-md border border-[#E8E8E8]" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <div className="flex gap-4">
                 <CheckCircle2 className="w-6 h-6 text-[#C49F64] flex-shrink-0 mt-1" />
                 <div className="flex-1">
@@ -521,7 +519,7 @@ export default function Home() {
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12">
           {/* Main Message */}
-          <div className="space-y-4 animate-fade-up">
+          <div className="space-y-4" data-aos="fade-up" data-aos-duration="800">
             <h2 className="text-4xl md:text-5xl font-bold text-[#2C353D]">
               Память — это единственное, что нельзя отнять.
             </h2>
@@ -531,7 +529,7 @@ export default function Home() {
           </div>
 
           {/* Email Signup */}
-          <div className="max-w-md mx-auto space-y-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+          <div className="max-w-md mx-auto space-y-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
             <div className="flex gap-2">
               <Input
                 type="email"
@@ -550,7 +548,7 @@ export default function Home() {
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-4 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+          <div className="space-y-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
             <p className="text-lg font-semibold text-[#2C353D]">
               Мы на связи и поможем с любым вопросом
             </p>
@@ -572,25 +570,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Add AOS animation styles */}
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-up {
-          animation: fadeInUp 0.8s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
     </div>
   );
 }

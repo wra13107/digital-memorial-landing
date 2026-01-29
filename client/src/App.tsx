@@ -5,17 +5,33 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/" component={Home} />
+      <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
+}
+
+// Initialize AOS on mount
+function AOSInitializer() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-out",
+      once: true,
+      offset: 100,
+    });
+  }, []);
+  return null;
 }
 
 // NOTE: About Theme
@@ -31,6 +47,7 @@ function App() {
         // switchable
       >
         <TooltipProvider>
+          <AOSInitializer />
           <Toaster />
           <Router />
         </TooltipProvider>
