@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronRight, Play, Heart, MapPin, Music, Users, CheckCircle2, Lock, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import DemoProfileModal from "@/components/DemoProfileModal";
 
 /**
  * Digital Memorials Landing Page
@@ -24,6 +25,7 @@ import { useState } from "react";
 export default function Home() {
   const [checkEmail, setCheckEmail] = useState("");
   const [checkName, setCheckName] = useState("");
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -64,6 +66,7 @@ export default function Home() {
                 size="lg"
                 variant="outline"
                 className="border-2 border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64] hover:text-white"
+                onClick={() => setDemoModalOpen(true)}
               >
                 <Play className="w-4 h-4 mr-2" />
                 Посмотреть пример
@@ -570,6 +573,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Demo Profile Modal */}
+      <DemoProfileModal open={demoModalOpen} onOpenChange={setDemoModalOpen} />
     </div>
   );
 }
