@@ -44,14 +44,14 @@ export default function Home() {
 
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center">
-          <div className="max-w-2xl mx-auto space-y-6" data-aos="fade-up" data-aos-duration="800">
+          <div className="max-w-2xl mx-auto space-y-6 bg-white/85 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-2xl" data-aos="fade-up" data-aos-duration="800">
             <h1 className="text-5xl md:text-6xl font-bold text-[#2C353D] leading-tight">
               Камень хранит имя.
               <br />
               <span className="text-[#C49F64]">Мы храним жизнь.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-[#6E7A85] max-w-xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-[#2C353D] max-w-xl mx-auto leading-relaxed font-medium">
               Создайте цифровую страницу памяти с фото, видео и голосом близкого человека. Доступна в один клик прямо на месте захоронения через QR-код.
             </p>
 
