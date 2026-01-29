@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronRight, Play, Heart, MapPin, Music, Users, CheckCircle2, Lock, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import DemoProfileModal from "@/components/DemoProfileModal";
+import BeforeAfterComparison from "@/components/BeforeAfterComparison";
 
 /**
  * Digital Memorials Landing Page
@@ -87,35 +88,30 @@ export default function Home() {
             От памятника к памяти
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Before */}
-            <div className="space-y-4" data-aos="fade-up" data-aos-duration="800">
-              <div className="relative overflow-hidden rounded-lg shadow-md">
-                <img
-                  src="/images/before-after-memorial.jpg"
-                  alt="Before - Traditional memorial"
-                  className="w-full h-96 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              </div>
-              <p className="text-lg text-[#6E7A85] leading-relaxed">
-                Со временем надписи стираются, а истории забываются. Дети не узнают, каким был голос их прадеда.
-              </p>
+          <div className="space-y-8" data-aos="fade-up" data-aos-duration="800">
+            <div className="max-w-4xl mx-auto">
+              <BeforeAfterComparison
+                beforeImage="/images/before-after-memorial.jpg"
+                afterImage="/images/before-after-memorial.jpg"
+                beforeLabel="Традиционный памятник"
+                afterLabel="Цифровой мемориал"
+              />
             </div>
 
-            {/* After */}
-            <div className="space-y-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
-              <div className="relative overflow-hidden rounded-lg shadow-lg border-2 border-[#C49F64]">
-                <img
-                  src="/images/before-after-memorial.jpg"
-                  alt="After - Digital memorial"
-                  className="w-full h-96 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#C49F64]/20 to-transparent" />
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto">
+              <div className="space-y-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                <h3 className="text-xl font-bold text-[#2C353D]">Традиционный подход</h3>
+                <p className="text-lg text-[#6E7A85] leading-relaxed">
+                  Со временем надписи стираются, а истории забываются. Дети не узнают, каким был голос их прадеда. Память живёт только в сердцах.
+                </p>
               </div>
-              <p className="text-lg text-[#2C353D] font-semibold leading-relaxed">
-                Живая история, доступная через поколения. Голос, смех и мудрость навсегда с вами.
-              </p>
+
+              <div className="space-y-3" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
+                <h3 className="text-xl font-bold text-[#C49F64]">Цифровой мемориал</h3>
+                <p className="text-lg text-[#2C353D] font-semibold leading-relaxed">
+                  Живая история, доступная через поколения. Голос, смех и мудрость навсегда с вами. Память становится наследством.
+                </p>
+              </div>
             </div>
           </div>
         </div>
