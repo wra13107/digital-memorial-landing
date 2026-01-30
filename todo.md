@@ -167,3 +167,4 @@
 - [x] Update login form to support username input
 - [x] Update admin user with username "Administrator" in database
 - [x] Test admin login with username and password
+- [x] Fix session persistence by updating authenticateRequest to support local JWT tokens
