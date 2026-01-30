@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronRight, Play, Heart, MapPin, Music, Users, CheckCircle2, Lock, AlertCircle } from "lucide-react";
+import { ChevronRight, Play, Heart, MapPin, Music, Users, CheckCircle2, Lock, AlertCircle, ArrowUp, LogIn, UserPlus } from "lucide-react";
 import { useState } from "react";
+import React from "react";
 import DemoProfileModal from "@/components/DemoProfileModal";
 import BeforeAfterComparison from "@/components/BeforeAfterComparison";
 
@@ -27,6 +28,20 @@ export default function Home() {
   const [checkEmail, setCheckEmail] = useState("");
   const [checkName, setCheckName] = useState("");
   const [demoModalOpen, setDemoModalOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleScroll = () => {
+    setShowScrollTop(window.scrollY > 300);
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -35,6 +50,19 @@ export default function Home() {
         <div className="container flex items-center justify-between h-20">
           <div className="flex items-center gap-3">
             <img src="/images/logo.png" alt="Demoria Logo" className="h-12 w-auto" />
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title="Вход">
+              <LogIn className="w-5 h-5 text-[#C49F64]" />
+            </button>
+            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title="Регистрация">
+              <UserPlus className="w-5 h-5 text-[#C49F64]" />
+            </button>
+            {showScrollTop && (
+              <button onClick={handleScrollTop} className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title="Вернуться вверх">
+                <ArrowUp className="w-5 h-5 text-[#C49F64]" />
+              </button>
+            )}
           </div>
         </div>
       </header>
