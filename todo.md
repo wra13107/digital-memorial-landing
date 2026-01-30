@@ -140,3 +140,11 @@
 - [x] Add audio playback preview before upload (audio player in preview)
 - [x] Implement audio file management and deletion (delete button)
 - [x] Test audio recording and upload functionality (dev server running without errors)
+
+
+## Phase 17: QR Code Generation
+- [x] Create QR code generator component with qrcode.react library (QRCodeGenerator.tsx)
+- [x] Add QR code display in public memorial pages (integrated in PublicMemorialPage)
+- [x] Implement download functionality for QR codes (PNG format with canvas download)
+- [x] Add QR code customization (size, color, logo - SVG format)
+- [x] Test QR code generation and download (dev server running without errors)

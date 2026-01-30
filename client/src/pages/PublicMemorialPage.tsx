@@ -8,6 +8,7 @@ import { useLocation, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MapView } from "@/components/Map";
 import { SocialShare } from "@/components/SocialShare";
+import { QRCodeGenerator } from "@/components/QRCodeGenerator";
 import { toast } from "sonner";
 
 export default function PublicMemorialPage() {
@@ -165,6 +166,15 @@ export default function PublicMemorialPage() {
               </div>
             )}
           </Card>
+
+          {/* QR Code Section */}
+          <div className="mt-8">
+            <QRCodeGenerator
+              url={typeof window !== "undefined" ? window.location.href : ""}
+              title="Поделиться мемориалом"
+              size={200}
+            />
+          </div>
         </div>
 
         {/* Media Galleries and Guestbook */}
