@@ -65,8 +65,7 @@ export default function Home() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-2 border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64] hover:text-white"
+                className="bg-[#C49F64]/50 hover:bg-[#C49F64] text-white font-semibold shadow-lg hover:shadow-xl transition-all"
                 onClick={() => setDemoModalOpen(true)}
               >
                 <Play className="w-4 h-4 mr-2" />
