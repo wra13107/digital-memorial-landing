@@ -5,7 +5,7 @@ import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
 import { z } from "zod";
 import { hashPassword, verifyPassword, createToken, createAuthCookie } from "./auth";
-import { getUserByEmail, createLocalUser, getUserById } from "./db";
+import { getUserByEmail, createLocalUser, getUserById, updateUser } from "./db";
 import { TRPCError } from "@trpc/server";
 
 const COOKIE_NAME = "auth_token";
@@ -149,6 +149,95 @@ export const appRouter = router({
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Login failed",
+          });
+        }
+      }),
+
+    // Get user profile
+    profile: protectedProcedure.query(async ({ ctx }) => {
+      if (!ctx.user?.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User not authenticated",
+        });
+      }
+
+      const user = await getUserById(ctx.user.id);
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        patronymic: user.patronymic,
+        birthDate: user.birthDate,
+        deathDate: user.deathDate,
+        role: user.role,
+      };
+    }),
+
+    // Update user profile
+    updateProfile: protectedProcedure
+      .input(
+        z.object({
+          firstName: z.string().min(1, "First name is required").optional(),
+          lastName: z.string().min(1, "Last name is required").optional(),
+          patronymic: z.string().optional(),
+          birthDate: z.date().optional(),
+          deathDate: z.date().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (!ctx.user?.id) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "User not authenticated",
+          });
+        }
+
+        try {
+          const updateData: any = {};
+          if (input.firstName !== undefined) updateData.firstName = input.firstName;
+          if (input.lastName !== undefined) updateData.lastName = input.lastName;
+          if (input.patronymic !== undefined) updateData.patronymic = input.patronymic;
+          if (input.birthDate !== undefined) updateData.birthDate = input.birthDate;
+          if (input.deathDate !== undefined) updateData.deathDate = input.deathDate;
+          
+          // Update name field for display
+          if (input.firstName || input.lastName) {
+            const user = await getUserById(ctx.user.id);
+            const firstName = input.firstName || user?.firstName || "";
+            const lastName = input.lastName || user?.lastName || "";
+            updateData.name = `${firstName} ${lastName}`.trim();
+          }
+
+          await updateUser(ctx.user.id, updateData);
+
+          const updatedUser = await getUserById(ctx.user.id);
+          return {
+            success: true,
+            user: {
+              id: updatedUser?.id,
+              email: updatedUser?.email,
+              firstName: updatedUser?.firstName,
+              lastName: updatedUser?.lastName,
+              patronymic: updatedUser?.patronymic,
+              birthDate: updatedUser?.birthDate,
+              deathDate: updatedUser?.deathDate,
+              role: updatedUser?.role,
+            },
+          };
+        } catch (error) {
+          console.error("[Auth] Profile update error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to update profile",
           });
         }
       }),

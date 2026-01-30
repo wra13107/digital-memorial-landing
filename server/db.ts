@@ -91,14 +91,15 @@ export async function getUserByOpenId(openId: string) {
 
 // TODO: add feature queries here as your schema grows.
 
-export async function getUserById(id: number) {
+export async function getUserById(id: number | string) {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get user: database not available");
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  const numId = typeof id === 'string' ? parseInt(id, 10) : id;
+  const result = await db.select().from(users).where(eq(users.id, numId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -176,13 +177,14 @@ export async function getAllUsers() {
   return await db.select().from(users);
 }
 
-export async function updateUser(id: number, data: Partial<InsertUser>) {
+export async function updateUser(id: number | string, data: Partial<InsertUser>) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  return await db.update(users).set(data).where(eq(users.id, id));
+  const numId = typeof id === 'string' ? parseInt(id, 10) : id;
+  return await db.update(users).set(data).where(eq(users.id, numId));
 }
 
 export async function deleteUser(id: number) {
@@ -234,7 +236,7 @@ export async function createLocalUser(data: {
   // Generate a unique openId for local users
   const openId = `local_${data.email}_${Date.now()}`;
 
-  const result = await db.insert(users).values({
+  await db.insert(users).values({
     openId,
     email: data.email,
     passwordHash: data.passwordHash,
@@ -248,5 +250,10 @@ export async function createLocalUser(data: {
     name: `${data.firstName} ${data.lastName}`,
   });
 
-  return result;
+  // Fetch and return the created user
+  const user = await getUserByEmail(data.email);
+  if (!user) {
+    throw new Error("Failed to create user");
+  }
+  return user;
 }

@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AdminPanel from "./pages/AdminPanel";
 import MemorialPage from "./pages/MemorialPage";
+import Profile from "./pages/Profile";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -31,6 +32,11 @@ function Router() {
       <Route path="/admin">
         <ProtectedRoute requiredRole="admin">
           <AdminPanel />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/profile">
+        <ProtectedRoute>
+          <Profile />
         </ProtectedRoute>
       </Route>
       <Route path="/memorial/:id" component={MemorialPage} />
