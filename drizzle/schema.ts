@@ -25,6 +25,8 @@ export const users = mysqlTable("users", {
   passwordHash: text("passwordHash"),
   birthDate: timestamp("birthDate"),
   deathDate: timestamp("deathDate"),
+  passwordResetToken: varchar("passwordResetToken", { length: 255 }).unique(),
+  passwordResetExpiry: timestamp("passwordResetExpiry"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),

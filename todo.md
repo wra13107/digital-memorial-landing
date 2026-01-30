@@ -193,3 +193,14 @@
 - [x] Create welcome email template with user credentials
 - [x] Update createUser procedure to send welcome email
 - [x] Test email sending for new users
+
+
+## Phase 23: Self-Service Password Reset
+- [x] Add passwordResetToken and passwordResetExpiry fields to users table
+- [x] Create password reset token generation and verification functions
+- [x] Implement forgot password API procedure
+- [x] Implement reset password API procedure
+- [x] Create password reset email template
+- [x] Build forgot password form UI
+- [x] Build reset password form UI
+- [x] Test password reset flow end-to-end

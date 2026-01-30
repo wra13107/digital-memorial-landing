@@ -4,9 +4,11 @@ import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
 import { z } from "zod";
-import { hashPassword, verifyPassword, createToken, createAuthCookie } from "./auth";
-import { getUserByEmail, createLocalUser, getUserById, updateUser } from "./db";
+import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid } from "./auth";
+import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword } from "./db";
+import { sendPasswordResetEmail } from "./email";
 import { TRPCError } from "@trpc/server";
+import { ENV } from "./_core/env";
 
 const COOKIE_NAME = "auth_token";
 
@@ -246,6 +248,69 @@ export const appRouter = router({
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to update profile",
+          });
+        }
+      }),
+    // Forgot password - request password reset
+    forgotPassword: publicProcedure
+      .input(z.object({ email: z.string().email("Invalid email address") }))
+      .mutation(async ({ input }) => {
+        try {
+          const user = await getUserByEmail(input.email);
+          if (!user) {
+            return { success: true, message: "If an account exists, a reset link has been sent" };
+          }
+          const resetToken = generatePasswordResetToken();
+          const expiry = getPasswordResetExpiry();
+          await setPasswordResetToken(user.id, resetToken, expiry);
+          const resetUrl = `https://digimemorial-7bqi4qlk.manus.space/reset-password?token=${resetToken}`;
+          await sendPasswordResetEmail({
+            email: user.email!,
+            firstName: user.firstName || "User",
+            resetToken,
+            resetUrl,
+          });
+          return { success: true, message: "If an account exists, a reset link has been sent" };
+        } catch (error) {
+          console.error("[Auth] Forgot password error:", error);
+          return { success: true, message: "If an account exists, a reset link has been sent" };
+        }
+      }),
+    // Reset password - verify token and set new password
+    resetPassword: publicProcedure
+      .input(
+        z.object({
+          token: z.string().min(1, "Reset token is required"),
+          newPassword: z.string().min(8, "Password must be at least 8 characters"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          const user = await getUserByPasswordResetToken(input.token);
+          if (!user) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Invalid or expired reset token",
+            });
+          }
+          if (!isPasswordResetTokenValid(user.passwordResetExpiry)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Reset token has expired",
+            });
+          }
+          const passwordHash = await hashPassword(input.newPassword);
+          await updateUserPassword(user.id, passwordHash);
+          await clearPasswordResetToken(user.id);
+          return { success: true, message: "Password has been reset successfully" };
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[Auth] Reset password error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to reset password",
           });
         }
       }),

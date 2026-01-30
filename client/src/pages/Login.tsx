@@ -120,6 +120,16 @@ export default function Login() {
           </form>
 
           <p className="text-center text-[#6E7A85] text-sm mt-6">
+            Забыли пароль?{" "}
+            <a
+              href="/forgot-password"
+              className="text-[#C49F64] font-semibold hover:underline"
+            >
+              Сбросить пароль
+            </a>
+          </p>
+
+          <p className="text-center text-[#6E7A85] text-sm mt-4">
             Нет аккаунта?{" "}
             <button
               onClick={() => navigate("/register")}

@@ -271,3 +271,58 @@ export async function createLocalUser(data: {
   }
   return user;
 }
+
+
+/**
+ * Update password reset token for a user
+ */
+export async function setPasswordResetToken(userId: number, token: string, expiry: Date): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.update(users).set({
+    passwordResetToken: token,
+    passwordResetExpiry: expiry,
+  }).where(eq(users.id, userId));
+}
+
+/**
+ * Get user by password reset token
+ */
+export async function getUserByPasswordResetToken(token: string): Promise<typeof users.$inferSelect | undefined> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return undefined;
+  }
+  const result = await db.select().from(users).where(eq(users.passwordResetToken, token)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+/**
+ * Clear password reset token for a user
+ */
+export async function clearPasswordResetToken(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.update(users).set({
+    passwordResetToken: null,
+    passwordResetExpiry: null,
+  }).where(eq(users.id, userId));
+}
+
+/**
+ * Update user password
+ */
+export async function updateUserPassword(userId: number, passwordHash: string): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.update(users).set({
+    passwordHash,
+  }).where(eq(users.id, userId));
+}

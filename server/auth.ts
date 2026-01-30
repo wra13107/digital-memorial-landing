@@ -79,3 +79,27 @@ export function getAuthTokenFromCookies(cookieHeader: string): string | null {
 export function clearAuthCookie(): string {
   return `${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`;
 }
+
+/**
+ * Generate a secure password reset token
+ */
+export function generatePasswordResetToken(): string {
+  return require("crypto").randomBytes(32).toString("hex");
+}
+
+/**
+ * Get password reset token expiry time (24 hours from now)
+ */
+export function getPasswordResetExpiry(): Date {
+  const expiry = new Date();
+  expiry.setHours(expiry.getHours() + 24);
+  return expiry;
+}
+
+/**
+ * Verify if password reset token is still valid
+ */
+export function isPasswordResetTokenValid(expiryTime: Date | null): boolean {
+  if (!expiryTime) return false;
+  return new Date() < expiryTime;
+}
