@@ -30,6 +30,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
+      {/* ============ HEADER ============ */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+        <div className="container flex items-center justify-between h-20">
+          <div className="flex items-center gap-3">
+            <img src="/images/logo.png" alt="Demoria Logo" className="h-12 w-auto" />
+          </div>
+        </div>
+      </header>
+
       {/* ============ BLOCK 1: HERO SCREEN ============ */}
       <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#F0F4F8] to-[#FDFBF7]">
         {/* Background Image */}
@@ -563,7 +572,7 @@ export default function Home() {
           {/* Footer Bottom */}
           <div className="pt-8 border-t border-[#E8E8E8]">
             <p className="text-sm text-[#6E7A85]">
-              © 2026 Digital Memorials. Все права защищены.
+              © 2026 Цифровой мемориал. Все права защищены.
             </p>
           </div>
         </div>
