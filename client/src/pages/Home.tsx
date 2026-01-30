@@ -35,9 +35,9 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/images/hero-sunset-memorial.jpg"
+            src="/images/hero-memorial-qr.jpg"
             alt="Memorial with QR code at sunset"
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full object-cover opacity-100"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#FDFBF7] via-transparent to-[#FDFBF7]" />
         </div>
@@ -51,7 +51,7 @@ export default function Home() {
               <span className="text-[#C49F64]">Мы храним жизнь.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-[#2C353D] max-w-xl mx-auto leading-relaxed font-medium bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+            <p className="text-lg md:text-xl text-[#2C353D] max-w-xl mx-auto leading-relaxed font-medium">
               Создайте цифровую страницу памяти с фото, видео и голосом близкого человека. Доступна в один клик прямо на месте захоронения через QR-код.
             </p>
 
