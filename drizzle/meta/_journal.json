@@ -43,6 +43,13 @@
       "when": 1769782729825,
       "tag": "0005_wide_wolfpack",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1769783024658,
+      "tag": "0006_common_inertia",
+      "breakpoints": true
     }
   ]
 }

@@ -60,12 +60,22 @@ export default function Register() {
         patronymic: formData.patronymic || undefined,
       });
 
-      setSuccess("Регистрация успешна! Перенаправляю в личный кабинет...");
+      setSuccess("Регистрация успешна! Пожалуйста, проверьте вашу почту для подтверждения адреса.");
       
-      // Redirect to dashboard after 2 seconds
+      // Clear form
+      setFormData({
+        lastName: "",
+        firstName: "",
+        patronymic: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      
+      // Redirect to login after 3 seconds
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
+        navigate("/login");
+      }, 3000);
     } catch (err: any) {
       const errorMessage = err?.message || "Ошибка при регистрации";
       setError(errorMessage);

@@ -204,3 +204,14 @@
 - [x] Build forgot password form UI
 - [x] Build reset password form UI
 - [x] Test password reset flow end-to-end
+
+
+## Phase 24: Email Verification on Registration
+- [x] Add emailVerificationToken and emailVerified fields to users table
+- [x] Create email verification token generation and verification functions
+- [x] Implement sendVerificationEmail function
+- [x] Update registration procedure to require email verification
+- [x] Create verifyEmail API procedure
+- [x] Build email verification page UI
+- [x] Update registration form to show verification pending message
+- [x] Test email verification flow end-to-end

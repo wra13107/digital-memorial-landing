@@ -326,3 +326,46 @@ export async function updateUserPassword(userId: number, passwordHash: string): 
     passwordHash,
   }).where(eq(users.id, userId));
 }
+
+
+/**
+ * Set email verification token for a user
+ */
+export async function setEmailVerificationToken(userId: number, token: string, expiry: Date): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.update(users).set({
+    emailVerificationToken: token,
+    emailVerificationExpiry: expiry,
+  }).where(eq(users.id, userId));
+}
+
+/**
+ * Get user by email verification token
+ */
+export async function getUserByEmailVerificationToken(token: string): Promise<typeof users.$inferSelect | undefined> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return undefined;
+  }
+  const result = await db.select().from(users).where(eq(users.emailVerificationToken, token)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+/**
+ * Mark email as verified for a user
+ */
+export async function markEmailAsVerified(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  await db.update(users).set({
+    emailVerified: true,
+    emailVerificationToken: null,
+    emailVerificationExpiry: null,
+  }).where(eq(users.id, userId));
+}

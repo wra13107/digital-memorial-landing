@@ -103,3 +103,28 @@ export function isPasswordResetTokenValid(expiryTime: Date | null): boolean {
   if (!expiryTime) return false;
   return new Date() < expiryTime;
 }
+
+
+/**
+ * Generate a secure email verification token
+ */
+export function generateEmailVerificationToken(): string {
+  return require("crypto").randomBytes(32).toString("hex");
+}
+
+/**
+ * Get email verification token expiry time (24 hours from now)
+ */
+export function getEmailVerificationExpiry(): Date {
+  const expiry = new Date();
+  expiry.setHours(expiry.getHours() + 24);
+  return expiry;
+}
+
+/**
+ * Verify if email verification token is still valid
+ */
+export function isEmailVerificationTokenValid(expiryTime: Date | null): boolean {
+  if (!expiryTime) return false;
+  return new Date() < expiryTime;
+}

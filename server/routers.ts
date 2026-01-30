@@ -4,9 +4,9 @@ import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
 import { z } from "zod";
-import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid } from "./auth";
-import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword } from "./db";
-import { sendPasswordResetEmail } from "./email";
+import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid, generateEmailVerificationToken, getEmailVerificationExpiry, isEmailVerificationTokenValid } from "./auth";
+import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, setEmailVerificationToken, getUserByEmailVerificationToken, markEmailAsVerified } from "./db";
+import { sendPasswordResetEmail, sendEmailVerificationEmail } from "./email";
 import { TRPCError } from "@trpc/server";
 import { ENV } from "./_core/env";
 
@@ -71,21 +71,30 @@ export const appRouter = router({
             });
           }
 
-          // Create JWT token with admin flag for 10-minute timeout
-          const isAdmin = user.role === 'admin';
-          const token = await createToken(user.id, user.email!, isAdmin);
+          // Generate email verification token
+          const verificationToken = generateEmailVerificationToken();
+          const verificationExpiry = getEmailVerificationExpiry();
+          await setEmailVerificationToken(user.id, verificationToken, verificationExpiry);
 
-          // Set cookie
-          ctx.res.setHeader("Set-Cookie", createAuthCookie(token));
+          // Send verification email
+          const verificationUrl = `https://digimemorial-7bqi4qlk.manus.space/verify-email?token=${verificationToken}`;
+          await sendEmailVerificationEmail({
+            email: user.email!,
+            firstName: user.firstName || "User",
+            verificationToken,
+            verificationUrl,
+          });
 
           return {
             success: true,
+            message: "Registration successful! Please check your email to verify your account.",
             user: {
               id: user.id,
               email: user.email,
               firstName: user.firstName,
               lastName: user.lastName,
               role: user.role,
+              emailVerified: user.emailVerified,
             },
           };
         } catch (error) {
@@ -311,6 +320,40 @@ export const appRouter = router({
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to reset password",
+          });
+        }
+      }),
+    verifyEmail: publicProcedure
+      .input(
+        z.object({
+          token: z.string().min(1, "Verification token is required"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          const user = await getUserByEmailVerificationToken(input.token);
+          if (!user) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Invalid or expired verification token",
+            });
+          }
+          if (!isEmailVerificationTokenValid(user.emailVerificationExpiry)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Verification token has expired",
+            });
+          }
+          await markEmailAsVerified(user.id);
+          return { success: true, message: "Email has been verified successfully" };
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[Auth] Email verification error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to verify email",
           });
         }
       }),

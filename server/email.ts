@@ -300,3 +300,132 @@ export async function sendPasswordResetEmail(options: {
     html,
   });
 }
+
+
+/**
+ * Send email verification email to user
+ */
+export async function sendEmailVerificationEmail(options: {
+  email: string;
+  firstName: string;
+  verificationToken: string;
+  verificationUrl: string;
+}): Promise<boolean> {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2C353D;
+            background-color: #FDFBF7;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            background: linear-gradient(135deg, #C49F64 0%, #b8934f 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+          }
+          .content {
+            padding: 40px 30px;
+          }
+          .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+          }
+          .warning {
+            background-color: #FFF3CD;
+            border-left: 4px solid #FFC107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #856404;
+          }
+          .verify-button {
+            display: inline-block;
+            background-color: #C49F64;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 30px 0;
+          }
+          .verify-button:hover {
+            background-color: #b8934f;
+          }
+          .footer {
+            background-color: #FDFBF7;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #6E7A85;
+            border-top: 1px solid #E8E8E8;
+          }
+          .footer a {
+            color: #C49F64;
+            text-decoration: none;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Подтверждение Email</h1>
+          </div>
+          <div class="content">
+            <p class="greeting">Привет, ${options.firstName}!</p>
+            
+            <p>Спасибо за регистрацию в Demoria! Чтобы активировать вашу учетную запись, пожалуйста, подтвердите ваш email адрес.</p>
+            
+            <div class="warning">
+              <strong>Важно:</strong> Эта ссылка действительна только 24 часа. После истечения времени вам нужно будет зарегистрироваться заново.
+            </div>
+            
+            <p>Нажмите на кнопку ниже, чтобы подтвердить ваш email:</p>
+            
+            <div style="text-align: center;">
+              <a href="${options.verificationUrl}" class="verify-button">Подтвердить Email</a>
+            </div>
+            
+            <p style="font-size: 14px; color: #6E7A85;">
+              Или скопируйте эту ссылку в адресную строку браузера:<br>
+              <code style="background-color: #F0F4F8; padding: 5px 10px; border-radius: 3px; word-break: break-all;">${options.verificationUrl}</code>
+            </p>
+            
+            <p>Если вы не регистрировались в Demoria, просто игнорируйте это письмо.</p>
+            
+            <p>С уважением,<br>Команда Demoria</p>
+          </div>
+          <div class="footer">
+            <p>© 2026 Demoria. Все права защищены.</p>
+            <p><a href="#">Политика конфиденциальности</a> | <a href="#">Условия использования</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  return sendEmail({
+    to: options.email,
+    subject: 'Подтвердите ваш email адрес в Demoria',
+    html,
+  });
+}
