@@ -185,3 +185,11 @@
 - [x] Add user creation/editing form
 - [x] Add user deletion confirmation
 - [x] Test all CRUD operations
+
+
+## Phase 22: Admin Email & User Welcome Emails
+- [x] Update admin user with email d13107@mail.ru in database
+- [x] Implement email sending service using Manus built-in API
+- [x] Create welcome email template with user credentials
+- [x] Update createUser procedure to send welcome email
+- [x] Test email sending for new users

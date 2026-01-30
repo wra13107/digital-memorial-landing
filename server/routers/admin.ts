@@ -8,6 +8,7 @@ import {
   createLocalUser,
 } from "../db";
 import { hashPassword } from "../auth";
+import { sendWelcomeEmail } from "../email";
 import { TRPCError } from "@trpc/server";
 
 export const adminRouter = router({
@@ -69,6 +70,16 @@ export const adminRouter = router({
         if (input.role === "admin") {
           await updateUser(user.id, { role: "admin" });
         }
+
+        // Send welcome email with credentials
+        const loginUrl = 'https://digimemorial-7bqi4qlk.manus.space/login';
+        await sendWelcomeEmail({
+          email: input.email,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          password: input.password,
+          loginUrl,
+        });
 
         return {
           success: true,
