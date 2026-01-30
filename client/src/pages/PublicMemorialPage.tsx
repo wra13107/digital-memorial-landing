@@ -7,6 +7,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MapView } from "@/components/Map";
+import { SocialShare } from "@/components/SocialShare";
 import { toast } from "sonner";
 
 export default function PublicMemorialPage() {
@@ -103,9 +104,13 @@ export default function PublicMemorialPage() {
             Назад
           </button>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={handleShare}>
-              <Share2 className="w-4 h-4" />
-            </Button>
+            {memorial && (
+              <SocialShare
+                url={typeof window !== "undefined" ? window.location.href : ""}
+                title={`Мемориал ${memorial.firstName} ${memorial.lastName}`}
+                description={memorial.description || undefined}
+              />
+            )}
             {isOwner && memorial?.id && (
               <Button size="sm" onClick={handleEdit}>
                 <Edit2 className="w-4 h-4 mr-2" />
