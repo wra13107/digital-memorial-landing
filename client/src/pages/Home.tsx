@@ -1,3 +1,4 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronRight, Play, Heart, MapPin, Music, Users, CheckCircle2, Lock, AlertCircle, ArrowUp, LogIn, UserPlus } from "lucide-react";
@@ -26,6 +27,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
  */
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   const { language, setLanguage, t } = useLanguage();
   const [checkEmail, setCheckEmail] = useState("");
   const [checkName, setCheckName] = useState("");
