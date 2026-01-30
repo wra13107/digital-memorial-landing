@@ -2,9 +2,10 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Upload, X, Loader2, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { AudioRecorder } from "./AudioRecorder";
 
 interface MediaUploadProps {
   memorialId: number;
@@ -15,6 +16,7 @@ interface MediaUploadProps {
 export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [showRecorder, setShowRecorder] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -137,6 +139,14 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUp
     }
   };
 
+  const handleRecordingComplete = (blob: Blob) => {
+    const file = new File([blob], `recording-${Date.now()}.webm`, { type: "audio/webm" });
+    setSelectedFile(file);
+    setTitle("Audio recording");
+    setShowRecorder(false);
+    toast.success("Recording ready for upload");
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -146,6 +156,24 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUp
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Audio Recorder for audio media type */}
+        {mediaType === "audio" && (
+          <div className="space-y-2">
+            {!showRecorder ? (
+              <Button
+                onClick={() => setShowRecorder(true)}
+                variant="outline"
+                className="w-full border-[#C49F64] text-[#C49F64]"
+              >
+                <Mic className="w-4 h-4 mr-2" />
+                Record Audio Message
+              </Button>
+            ) : (
+              <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+            )}
+          </div>
+        )}
+
         {/* Drag and drop area */}
         <div
           onDragOver={handleDragOver}

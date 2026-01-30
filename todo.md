@@ -131,3 +131,12 @@
 - [x] Add share buttons for Facebook, Twitter, WhatsApp, Telegram
 - [x] Integrate share buttons into PublicMemorialPage
 - [x] Test share functionality on all platforms (dev server running without errors)
+
+
+## Phase 16: Audio Recording Feature
+- [x] Create audio recording component with browser MediaRecorder API (AudioRecorder.tsx)
+- [x] Add record/stop/pause controls to audio recorder (record, pause, stop buttons)
+- [x] Integrate audio recording into MediaUpload component (Record button in audio tab)
+- [x] Add audio playback preview before upload (audio player in preview)
+- [x] Implement audio file management and deletion (delete button)
+- [x] Test audio recording and upload functionality (dev server running without errors)
