@@ -520,13 +520,13 @@ export default function Home() {
       {/* ============ BLOCK 9: FOOTER ============ */}
       <section className="relative py-20 px-4 bg-gradient-to-b from-[#FDFBF7] to-[#F0F4F8] overflow-hidden">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0 opacity-15">
+        <div className="absolute inset-0 z-0 opacity-40">
           <img
             src="/images/footer-logo-bg.png"
             alt="Footer background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FDFBF7]/80 via-[#F0F4F8]/70 to-[#FDFBF7]/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FDFBF7]/60 via-[#F0F4F8]/50 to-[#FDFBF7]/60" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12">
