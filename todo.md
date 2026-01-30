@@ -86,3 +86,9 @@
 
 ## Phase 10: UI Improvements
 - [x] Link header icons to registration/login routes on home page
+
+
+## Phase 11: Admin Account Setup
+- [x] Create admin seeder migration script (scripts/seed-admin.mjs)
+- [x] Integrate seeder into deployment process (pnpm seed:admin)
+- [x] Test admin account creation (Admin ID: 85 created successfully)
