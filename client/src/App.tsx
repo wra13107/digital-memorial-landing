@@ -14,6 +14,7 @@ import MemorialPage from "./pages/MemorialPage";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -22,11 +23,18 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/register" component={Register} />
       <Route path="/login" component={Login} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/admin" component={AdminPanel} />
+      <Route path="/dashboard">
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin">
+        <ProtectedRoute requiredRole="admin">
+          <AdminPanel />
+        </ProtectedRoute>
+      </Route>
       <Route path="/memorial/:id" component={MemorialPage} />
       <Route path="/404" component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );

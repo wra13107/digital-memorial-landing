@@ -3,7 +3,8 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export default function Register() {
   const [, navigate] = useLocation();
@@ -16,7 +17,10 @@ export default function Register() {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const registerMutation = trpc.auth.register.useMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,6 +33,7 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     if (!formData.lastName || !formData.firstName || !formData.email || !formData.password) {
       setError("Пожалуйста, заполните все обязательные поля");
@@ -47,11 +52,24 @@ export default function Register() {
 
     setLoading(true);
     try {
-      // TODO: Implement registration API call
-      // For now, just redirect to login
-      navigate("/login");
+      await registerMutation.mutateAsync({
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        patronymic: formData.patronymic || undefined,
+      });
+
+      setSuccess("Регистрация успешна! Перенаправляю в личный кабинет...");
+      
+      // Redirect to dashboard after 2 seconds
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     } catch (err: any) {
-      setError(err.message || "Ошибка при регистрации");
+      const errorMessage = err?.message || "Ошибка при регистрации";
+      setError(errorMessage);
+      console.error("[Register] Error:", err);
     } finally {
       setLoading(false);
     }
@@ -71,6 +89,13 @@ export default function Register() {
             </div>
           )}
 
+          {success && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex gap-3">
+              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <p className="text-green-700 text-sm">{success}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-[#2C353D] mb-2">
@@ -83,6 +108,7 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder="Иванов"
                 className="w-full"
+                disabled={loading}
               />
             </div>
 
@@ -97,6 +123,7 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder="Иван"
                 className="w-full"
+                disabled={loading}
               />
             </div>
 
@@ -111,6 +138,7 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder="Иванович"
                 className="w-full"
+                disabled={loading}
               />
             </div>
 
@@ -125,6 +153,7 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder="your@email.com"
                 className="w-full"
+                disabled={loading}
               />
             </div>
 
@@ -139,6 +168,7 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder="Минимум 8 символов"
                 className="w-full"
+                disabled={loading}
               />
             </div>
 
@@ -153,15 +183,16 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder="Повторите пароль"
                 className="w-full"
+                disabled={loading}
               />
             </div>
 
             <Button
               type="submit"
-              disabled={loading}
+              disabled={loading || registerMutation.isPending}
               className="w-full bg-[#C49F64] hover:bg-[#b8934f] text-white font-semibold py-2"
             >
-              {loading ? "Регистрация..." : "Зарегистрироваться"}
+              {loading || registerMutation.isPending ? "Регистрация..." : "Зарегистрироваться"}
             </Button>
           </form>
 
@@ -170,6 +201,7 @@ export default function Register() {
             <button
               onClick={() => navigate("/login")}
               className="text-[#C49F64] font-semibold hover:underline"
+              disabled={loading}
             >
               Войти
             </button>

@@ -1,12 +1,17 @@
-import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
+import { z } from "zod";
+import { hashPassword, verifyPassword, createToken, createAuthCookie } from "./auth";
+import { getUserByEmail, createLocalUser, getUserById } from "./db";
+import { TRPCError } from "@trpc/server";
+
+const COOKIE_NAME = "auth_token";
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
+  // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -17,6 +22,136 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+    // Local authentication: Register
+    register: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email("Invalid email address"),
+          password: z.string().min(8, "Password must be at least 8 characters"),
+          firstName: z.string().min(1, "First name is required"),
+          lastName: z.string().min(1, "Last name is required"),
+          patronymic: z.string().optional(),
+          birthDate: z.date().optional(),
+          deathDate: z.date().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Check if user already exists
+          const existingUser = await getUserByEmail(input.email);
+          if (existingUser) {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "User with this email already exists",
+            });
+          }
+
+          // Hash password
+          const passwordHash = await hashPassword(input.password);
+
+          // Create user
+          const result = await createLocalUser({
+            email: input.email,
+            passwordHash,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            patronymic: input.patronymic,
+            birthDate: input.birthDate,
+            deathDate: input.deathDate,
+          });
+
+          // Get the created user
+          const user = await getUserByEmail(input.email);
+          if (!user) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to create user",
+            });
+          }
+
+          // Create JWT token
+          const token = await createToken(user.id, user.email!);
+
+          // Set cookie
+          ctx.res.setHeader("Set-Cookie", createAuthCookie(token));
+
+          return {
+            success: true,
+            user: {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              role: user.role,
+            },
+          };
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[Auth] Registration error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Registration failed",
+          });
+        }
+      }),
+
+    // Local authentication: Login
+    login: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email("Invalid email address"),
+          password: z.string().min(1, "Password is required"),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        try {
+          // Find user by email
+          const user = await getUserByEmail(input.email);
+          if (!user || !user.passwordHash) {
+            throw new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "Invalid email or password",
+            });
+          }
+
+          // Verify password
+          const isPasswordValid = await verifyPassword(input.password, user.passwordHash);
+          if (!isPasswordValid) {
+            throw new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "Invalid email or password",
+            });
+          }
+
+          // Create JWT token
+          const token = await createToken(user.id, user.email!);
+
+          // Set cookie
+          ctx.res.setHeader("Set-Cookie", createAuthCookie(token));
+
+          return {
+            success: true,
+            user: {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              role: user.role,
+            },
+          };
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[Auth] Login error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Login failed",
+          });
+        }
+      }),
   }),
   memorials: memorialsRouter,
   admin: adminRouter,

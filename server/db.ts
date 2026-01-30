@@ -199,3 +199,54 @@ export async function deleteUser(id: number) {
   
   return await db.delete(users).where(eq(users.id, id));
 }
+
+/**
+ * Get user by email for local authentication
+ */
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return undefined;
+  }
+
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+/**
+ * Create a new user with local authentication
+ */
+export async function createLocalUser(data: {
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
+  patronymic?: string;
+  birthDate?: Date;
+  deathDate?: Date;
+}) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  // Generate a unique openId for local users
+  const openId = `local_${data.email}_${Date.now()}`;
+
+  const result = await db.insert(users).values({
+    openId,
+    email: data.email,
+    passwordHash: data.passwordHash,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    patronymic: data.patronymic,
+    birthDate: data.birthDate,
+    deathDate: data.deathDate,
+    loginMethod: "local",
+    role: "user",
+    name: `${data.firstName} ${data.lastName}`,
+  });
+
+  return result;
+}

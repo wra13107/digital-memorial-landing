@@ -8,11 +8,13 @@
 - [x] Set up database migrations
 
 ## Phase 2: Authentication System
-- [x] Implement user registration with validation (page created)
-- [x] Implement user login with email + password (page created)
-- [x] Create password hashing and verification (backend routers created)
-- [x] Create session management (backend routers created)
-- [x] Create admin authentication (backend routers created)
+- [x] Implement user registration with validation (integrated with API)
+- [x] Implement user login with email + password (integrated with API)
+- [x] Create password hashing and verification (bcrypt implemented)
+- [x] Create session management (JWT tokens implemented)
+- [x] Create admin authentication (role-based access control)
+- [x] Implement protected routes with ProtectedRoute component
+- [x] Add session persistence with cookies
 
 ## Phase 3: Public User Profiles
 - [x] Create public profile template page (MemorialPage.tsx created)
