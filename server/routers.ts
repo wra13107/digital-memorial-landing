@@ -101,18 +101,24 @@ export const appRouter = router({
     login: publicProcedure
       .input(
         z.object({
-          email: z.string().email("Invalid email address"),
+          email: z.string(),
           password: z.string().min(1, "Password is required"),
         })
       )
       .mutation(async ({ input, ctx }) => {
         try {
-          // Find user by email
-          const user = await getUserByEmail(input.email);
+          // Try to find user by email first, then by username
+          let user = await getUserByEmail(input.email);
+          
+          if (!user) {
+            // Try to find by username if email lookup fails
+            const { getUserByUsername } = await import("./db");
+            user = await getUserByUsername(input.email);
+          }
           if (!user || !user.passwordHash) {
             throw new TRPCError({
               code: "UNAUTHORIZED",
-              message: "Invalid email or password",
+              message: "Invalid email/username or password",
             });
           }
 
@@ -121,7 +127,7 @@ export const appRouter = router({
           if (!isPasswordValid) {
             throw new TRPCError({
               code: "UNAUTHORIZED",
-              message: "Invalid email or password",
+              message: "Invalid email/username or password",
             });
           }
 

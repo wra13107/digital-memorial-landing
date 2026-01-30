@@ -157,3 +157,13 @@
 - [x] Display epitaph prominently on public memorial pages
 - [x] Add epitaph to memorial profile view
 - [x] Test epitaph functionality
+
+
+## Phase 19: Admin Login by Username
+- [x] Add username field to users table in database schema
+- [x] Create database migration for username field
+- [x] Update getUserByUsername function in server/db.ts
+- [x] Modify login procedure to accept username or email
+- [x] Update login form to support username input
+- [x] Update admin user with username "Administrator" in database
+- [x] Test admin login with username and password

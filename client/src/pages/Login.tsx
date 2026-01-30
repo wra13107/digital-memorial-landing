@@ -82,14 +82,14 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-[#2C353D] mb-2">
-                Email *
+                Email или логин *
               </label>
               <Input
-                type="email"
+                type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="your@email.com"
+                placeholder="your@email.com или Administrator"
                 className="w-full"
                 disabled={loading}
               />
