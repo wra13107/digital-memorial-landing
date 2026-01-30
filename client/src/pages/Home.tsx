@@ -5,6 +5,7 @@ import { useState } from "react";
 import React from "react";
 import DemoProfileModal from "@/components/DemoProfileModal";
 import BeforeAfterComparison from "@/components/BeforeAfterComparison";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Digital Memorials Landing Page
@@ -25,6 +26,7 @@ import BeforeAfterComparison from "@/components/BeforeAfterComparison";
  */
 
 export default function Home() {
+  const { language, setLanguage, t } = useLanguage();
   const [checkEmail, setCheckEmail] = useState("");
   const [checkName, setCheckName] = useState("");
   const [demoModalOpen, setDemoModalOpen] = useState(false);
@@ -52,14 +54,39 @@ export default function Home() {
             <img src="/images/logo.png" alt="Demoria Logo" className="h-12 w-auto" />
           </div>
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title="Вход">
+            {/* Language Switcher */}
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full hover:bg-[#C49F64]/10 transition-colors">
+              <button
+                onClick={() => setLanguage('ru')}
+                className={`px-2 py-1 rounded font-medium transition-colors ${
+                  language === 'ru'
+                    ? 'bg-[#C49F64] text-white'
+                    : 'text-[#C49F64] hover:bg-[#C49F64]/20'
+                }`}
+              >
+                РУ
+              </button>
+              <span className="text-[#C49F64]">/</span>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-2 py-1 rounded font-medium transition-colors ${
+                  language === 'en'
+                    ? 'bg-[#C49F64] text-white'
+                    : 'text-[#C49F64] hover:bg-[#C49F64]/20'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+            
+            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.login')}>
               <LogIn className="w-5 h-5 text-[#C49F64]" />
             </button>
-            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title="Регистрация">
+            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.register')}>
               <UserPlus className="w-5 h-5 text-[#C49F64]" />
             </button>
             {showScrollTop && (
-              <button onClick={handleScrollTop} className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title="Вернуться вверх">
+              <button onClick={handleScrollTop} className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.scrollUp')}>
                 <ArrowUp className="w-5 h-5 text-[#C49F64]" />
               </button>
             )}
@@ -83,13 +110,13 @@ export default function Home() {
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 text-center">
           <div className="max-w-2xl mx-auto space-y-6" data-aos="fade-up" data-aos-duration="800">
             <h1 className="text-5xl md:text-6xl font-bold text-[#2C353D] leading-tight">
-              Камень хранит имя.
+              {t('hero.title')}
               <br />
-              <span className="text-[#C49F64]">Мы храним жизнь.</span>
+              <span className="text-[#C49F64]">{t('hero.subtitle')}</span>
             </h1>
             
             <p className="text-lg md:text-xl text-[#2C353D] max-w-xl mx-auto leading-relaxed font-medium">
-              Создайте цифровую страницу памяти с фото, видео и голосом близкого человека. Доступна в один клик прямо на месте захоронения через QR-код.
+              {t('hero.description')}
             </p>
 
             {/* CTA Buttons */}
@@ -98,7 +125,7 @@ export default function Home() {
                 size="lg"
                 className="bg-[#C49F64] hover:bg-[#b8934f] text-white font-semibold shadow-lg hover:shadow-xl transition-all"
               >
-                Создать страницу памяти
+                {t('hero.createMemory')}
               </Button>
               <Button
                 size="lg"
@@ -106,12 +133,12 @@ export default function Home() {
                 onClick={() => setDemoModalOpen(true)}
               >
                 <Play className="w-4 h-4 mr-2" />
-                Посмотреть пример
+                {t('hero.viewExample')}
               </Button>
             </div>
 
             <p className="text-sm text-[#6E7A85] pt-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
-              Бесплатно. Без привязки карты.
+              {language === 'ru' ? 'Бесплатно. Без привязки карты.' : 'Free. No card required.'}
             </p>
           </div>
         </div>
