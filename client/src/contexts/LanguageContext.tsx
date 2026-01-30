@@ -19,7 +19,7 @@ export const translations = {
 
     // Block 1: Hero
     'hero.title': 'Камень хранит имя.',
-    'hero.subtitle': 'Мы хранимжизнь.',
+    'hero.subtitle': 'Мы храним жизнь.',
     'hero.description': 'Создайте цифровую страницу памяти с фото, видео и голосом близкого человека. Доступна в один клик прямо на месте захоронения через QR-код.',
     'hero.createMemory': 'Создать страницу памяти',
     'hero.viewExample': 'Посмотреть пример',

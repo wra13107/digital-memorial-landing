@@ -82,3 +82,7 @@
 - [ ] Add media display in public memorial pages
 - [x] Create unit tests for media operations (7 tests passing)
 - [x] Test media upload and management functionality
+
+
+## Phase 10: UI Improvements
+- [x] Link header icons to registration/login routes on home page

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronRight, Play, Heart, MapPin, Music, Users, CheckCircle2, Lock, AlertCircle, ArrowUp, LogIn, UserPlus } from "lucide-react";
 import { useState } from "react";
 import React from "react";
+import { Link } from "wouter";
 import DemoProfileModal from "@/components/DemoProfileModal";
 import BeforeAfterComparison from "@/components/BeforeAfterComparison";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -84,12 +85,16 @@ export default function Home() {
               </button>
             </div>
             
-            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.login')}>
-              <LogIn className="w-5 h-5 text-[#C49F64]" />
-            </button>
-            <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.register')}>
-              <UserPlus className="w-5 h-5 text-[#C49F64]" />
-            </button>
+            <Link href="/login">
+              <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.login')}>
+                <LogIn className="w-5 h-5 text-[#C49F64]" />
+              </button>
+            </Link>
+            <Link href="/register">
+              <button className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.register')}>
+                <UserPlus className="w-5 h-5 text-[#C49F64]" />
+              </button>
+            </Link>
             {showScrollTop && (
               <button onClick={handleScrollTop} className="p-2 hover:bg-[#C49F64]/10 rounded-full transition-colors" title={t('header.scrollUp')}>
                 <ArrowUp className="w-5 h-5 text-[#C49F64]" />
