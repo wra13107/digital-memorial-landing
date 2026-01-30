@@ -19,6 +19,7 @@ interface MemorialFormData {
   latitude: string;
   longitude: string;
   description: string;
+  epitaph: string;
 }
 
 export default function MemorialEditor() {
@@ -39,6 +40,7 @@ export default function MemorialEditor() {
     latitude: "",
     longitude: "",
     description: "",
+    epitaph: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -62,6 +64,7 @@ export default function MemorialEditor() {
         latitude: memorial.latitude?.toString() || "",
         longitude: memorial.longitude?.toString() || "",
         description: memorial.description || "",
+        epitaph: memorial.epitaph || "",
       });
 
       if (memorial.latitude && memorial.longitude) {
@@ -145,6 +148,7 @@ export default function MemorialEditor() {
           latitude: formData.latitude || undefined,
           longitude: formData.longitude || undefined,
           description: formData.description || undefined,
+          epitaph: formData.epitaph || undefined,
         });
         navigate("/dashboard");
       } else {
@@ -159,6 +163,7 @@ export default function MemorialEditor() {
           latitude: formData.latitude || undefined,
           longitude: formData.longitude || undefined,
           description: formData.description || undefined,
+          epitaph: formData.epitaph || undefined,
         });
         if (result && typeof result === 'object' && 'id' in result) {
           navigate(`/memorial/${(result as any).id}`);
@@ -364,7 +369,24 @@ export default function MemorialEditor() {
 
           {/* Biography Section */}
           <Card className="p-8">
-            <h2 className="text-2xl font-bold text-[#2C353D] mb-6">Биография</h2>
+            <h2 className="text-2xl font-bold text-[#2C353D] mb-6">Биография и Эпитафия</h2>
+
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-[#2C353D] mb-2">
+                Эпитафия
+              </label>
+              <Textarea
+                name="epitaph"
+                value={formData.epitaph}
+                onChange={handleInputChange}
+                placeholder="Напишите эпитафию в честь умершего (например: Светлая память или Вечная память в сердцах близких)"
+                rows={3}
+                className="resize-none"
+              />
+              <p className="text-xs text-[#6E7A85] mt-2">
+                Эпитафия будет отображаться в верхней части публичной страницы мемориала
+              </p>
+            </div>
 
             <div>
               <label className="block text-sm font-semibold text-[#2C353D] mb-2">

@@ -1,0 +1,1 @@
+ALTER TABLE `memorials` ADD `epitaph` text;

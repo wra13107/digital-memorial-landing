@@ -24,6 +24,7 @@ export const memorialsRouter = router({
         latitude: z.string().optional(),
         longitude: z.string().optional(),
         description: z.string().optional(),
+        epitaph: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -38,6 +39,7 @@ export const memorialsRouter = router({
         latitude: input.latitude ? parseFloat(input.latitude).toString() : undefined,
         longitude: input.longitude ? parseFloat(input.longitude).toString() : undefined,
         description: input.description,
+        epitaph: input.epitaph,
         isPublic: true,
       });
     }),
@@ -73,6 +75,7 @@ export const memorialsRouter = router({
         latitude: z.string().optional(),
         longitude: z.string().optional(),
         description: z.string().optional(),
+        epitaph: z.string().optional(),
         isPublic: z.boolean().optional(),
       })
     )
@@ -93,6 +96,7 @@ export const memorialsRouter = router({
       if (input.latitude) updateData.latitude = parseFloat(input.latitude).toString();
       if (input.longitude) updateData.longitude = parseFloat(input.longitude).toString();
       if (input.description) updateData.description = input.description;
+      if (input.epitaph !== undefined) updateData.epitaph = input.epitaph;
       if (input.isPublic !== undefined) updateData.isPublic = input.isPublic;
 
       return await updateMemorial(input.id, updateData);

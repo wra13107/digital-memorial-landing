@@ -148,3 +148,12 @@
 - [x] Implement download functionality for QR codes (PNG format with canvas download)
 - [x] Add QR code customization (size, color, logo - SVG format)
 - [x] Test QR code generation and download (dev server running without errors)
+
+
+## Phase 18: Epitaph Feature
+- [x] Add epitaph field to memorials table in database schema
+- [x] Create database migration for epitaph field
+- [x] Add epitaph editor to memorial editor form
+- [x] Display epitaph prominently on public memorial pages
+- [x] Add epitaph to memorial profile view
+- [x] Test epitaph functionality

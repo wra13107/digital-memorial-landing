@@ -48,6 +48,7 @@ export const memorials = mysqlTable("memorials", {
   latitude: decimal("latitude", { precision: 10, scale: 8 }),
   longitude: decimal("longitude", { precision: 11, scale: 8 }),
   description: text("description"),
+  epitaph: text("epitaph"),
   isPublic: boolean("isPublic").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

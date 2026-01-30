@@ -146,6 +146,14 @@ export default function PublicMemorialPage() {
                 {memorial.birthDate && new Date(memorial.birthDate).toLocaleDateString("ru-RU")} —{" "}
                 {memorial.deathDate && new Date(memorial.deathDate).toLocaleDateString("ru-RU")}
               </p>
+              
+              {memorial.epitaph && (
+                <div className="mt-6 pt-6 border-t border-[#E8E8E8]">
+                  <p className="text-lg italic text-[#C49F64] font-semibold leading-relaxed">
+                    {memorial.epitaph}
+                  </p>
+                </div>
+              )}
             </div>
 
             {memorial.burialPlace && (
