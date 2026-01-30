@@ -139,4 +139,84 @@ export const memorialsRouter = router({
 
       return await deleteGalleryItem(input.id);
     }),
+
+  // Generate presigned URL for file upload
+  uploadMedia: protectedProcedure
+    .input(
+      z.object({
+        memorialId: z.number(),
+        fileName: z.string().min(1),
+        fileType: z.string().min(1),
+        fileSize: z.number().min(1),
+        mediaType: z.enum(["photo", "video", "audio"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Validate file size (100MB max)
+      const MAX_FILE_SIZE = 100 * 1024 * 1024;
+      if (input.fileSize > MAX_FILE_SIZE) {
+        throw new Error("File size exceeds 100MB limit");
+      }
+
+      // Validate file types
+      const allowedTypes: Record<string, string[]> = {
+        photo: ["image/jpeg", "image/png", "image/webp", "image/gif"],
+        video: ["video/mp4", "video/webm", "video/quicktime"],
+        audio: ["audio/mpeg", "audio/wav", "audio/webm", "audio/ogg"],
+      };
+
+      if (!allowedTypes[input.mediaType].includes(input.fileType)) {
+        throw new Error(`Invalid file type for ${input.mediaType}`);
+      }
+
+      // Check memorial ownership
+      const memorial = await getMemorialById(input.memorialId);
+      if (!memorial || memorial.userId !== ctx.user.id) {
+        throw new Error("Access denied");
+      }
+
+      // Generate S3 key
+      const timestamp = Date.now();
+      const randomSuffix = Math.random().toString(36).substring(7);
+      const s3Key = `memorials/${ctx.user.id}/${input.memorialId}/${input.mediaType}/${timestamp}-${randomSuffix}-${input.fileName}`;
+
+      // Return S3 key for client-side upload
+      return {
+        s3Key,
+        mediaType: input.mediaType,
+        fileName: input.fileName,
+      };
+    }),
+
+  // Confirm media upload and add to gallery
+  confirmMediaUpload: protectedProcedure
+    .input(
+      z.object({
+        memorialId: z.number(),
+        s3Key: z.string(),
+        mediaType: z.enum(["photo", "video", "audio"]),
+        title: z.string().optional(),
+        description: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Check memorial ownership
+      const memorial = await getMemorialById(input.memorialId);
+      if (!memorial || memorial.userId !== ctx.user.id) {
+        throw new Error("Access denied");
+      }
+
+      // Construct S3 URL
+      const s3Url = `https://${process.env.VITE_FRONTEND_FORGE_API_URL?.split("//")[1] || "s3.amazonaws.com"}/${input.s3Key}`;
+
+      // Add to gallery
+      return await addGalleryItem({
+        memorialId: input.memorialId,
+        type: input.mediaType,
+        url: s3Url,
+        title: input.title,
+        description: input.description,
+        displayOrder: 0,
+      });
+    }),
 });

@@ -69,3 +69,16 @@
 - [x] Create unit tests for profile operations (6 tests passing)
 - [x] Test profile view and edit functionality
 - [x] Add profile route to App.tsx
+
+
+## Phase 9: Media Upload & Management
+- [x] Create backend procedures for media upload (uploadMedia endpoint)
+- [x] Create backend procedure for listing user media files (getGalleryItems)
+- [x] Create backend procedure for deleting media files (deleteGalleryItem)
+- [x] Build media upload component with drag-and-drop (MediaUpload.tsx)
+- [x] Implement file validation (size, type, format)
+- [x] Integrate S3 storage for file uploads (upload.ts router)
+- [x] Create media gallery management interface (MediaGallery.tsx)
+- [ ] Add media display in public memorial pages
+- [x] Create unit tests for media operations (7 tests passing)
+- [x] Test media upload and management functionality
