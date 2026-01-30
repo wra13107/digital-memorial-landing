@@ -111,3 +111,16 @@
 - [x] Add form submission with API integration (tRPC mutations)
 - [x] Create unit tests for memorial operations (6 tests created)
 - [x] Test memorial editor functionality (routes added to App.tsx)
+
+
+## Phase 14: Public Memorial Pages
+- [x] Create backend procedure for retrieving public memorial data (getPublic, getPublicGallery)
+- [x] Build public memorial page component (PublicMemorialPage.tsx)
+- [x] Display memorial details (name, dates, burial place, biography)
+- [x] Integrate photo gallery in public pages (grid layout)
+- [x] Integrate video gallery in public pages (video player)
+- [x] Integrate audio gallery in public pages (audio player)
+- [x] Add interactive map showing burial location (MapView component)
+- [x] Implement noindex meta tags for SEO protection (NoindexHead component)
+- [ ] Create unit tests for public memorial operations
+- [x] Test public memorial page functionality (dev server running)

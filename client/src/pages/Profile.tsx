@@ -6,8 +6,18 @@ import { Card } from "@/components/ui/card";
 import { AlertCircle, CheckCircle2, Edit2, X, Save, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { NoindexHead } from "@/components/NoindexHead";
 
 export default function Profile() {
+  return (
+    <>
+      <NoindexHead />
+      <ProfileContent />
+    </>
+  );
+}
+
+function ProfileContent() {
   const [, navigate] = useLocation();
   const { user, loading: authLoading } = useAuth({ redirectOnUnauthenticated: true });
   const [isEditing, setIsEditing] = useState(false);

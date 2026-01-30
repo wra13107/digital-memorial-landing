@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
+import { TRPCError } from "@trpc/server";
 import {
   createMemorial,
   getMemorialsByUserId,
@@ -218,5 +219,33 @@ export const memorialsRouter = router({
         description: input.description,
         displayOrder: 0,
       });
+    }),
+
+  // Public procedure to get memorial details without authentication
+  getPublic: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const memorial = await getMemorialById(input.id);
+      if (!memorial || !memorial.isPublic) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Memorial not found or is not public",
+        });
+      }
+      return memorial;
+    }),
+
+  // Public procedure to get gallery items for a memorial
+  getPublicGallery: publicProcedure
+    .input(z.object({ memorialId: z.number() }))
+    .query(async ({ input }) => {
+      const memorial = await getMemorialById(input.memorialId);
+      if (!memorial || !memorial.isPublic) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Memorial not found or is not public",
+        });
+      }
+      return await getGalleryItemsByMemorialId(input.memorialId);
     }),
 });

@@ -5,8 +5,18 @@ import { Input } from "@/components/ui/input";
 import { Edit2, Trash2, LogOut, Plus, Search } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
+import { NoindexHead } from "@/components/NoindexHead";
 
 export default function AdminPanel() {
+  return (
+    <>
+      <NoindexHead />
+      <AdminPanelContent />
+    </>
+  );
+}
+
+function AdminPanelContent() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
   const [users, setUsers] = useState<any[]>([]);

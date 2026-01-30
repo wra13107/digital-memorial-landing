@@ -8,9 +8,19 @@ import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MediaUpload } from "@/components/MediaUpload";
 import { MediaGallery } from "@/components/MediaGallery";
+import { NoindexHead } from "@/components/NoindexHead";
 
 
 export default function Dashboard() {
+  return (
+    <>
+      <NoindexHead />
+      <DashboardContent />
+    </>
+  );
+}
+
+function DashboardContent() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("profile");
