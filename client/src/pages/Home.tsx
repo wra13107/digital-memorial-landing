@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       {/* ============ HEADER ============ */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
         <div className="container flex items-center justify-between h-20">
           <div className="flex items-center gap-3">
             <img src="/images/logo.png" alt="Demoria Logo" className="h-12 w-auto" />
@@ -520,8 +520,13 @@ export default function Home() {
       {/* ============ BLOCK 9: FOOTER ============ */}
       <section className="relative py-20 px-4 bg-gradient-to-b from-[#FDFBF7] to-[#F0F4F8] overflow-hidden">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#C49F64]/5 to-[#C49F64]/10" />
+        <div className="absolute inset-0 z-0 opacity-15">
+          <img
+            src="/images/footer-logo-bg.png"
+            alt="Footer background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FDFBF7]/80 via-[#F0F4F8]/70 to-[#FDFBF7]/80" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12">
