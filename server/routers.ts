@@ -69,8 +69,9 @@ export const appRouter = router({
             });
           }
 
-          // Create JWT token
-          const token = await createToken(user.id, user.email!);
+          // Create JWT token with admin flag for 10-minute timeout
+          const isAdmin = user.role === 'admin';
+          const token = await createToken(user.id, user.email!, isAdmin);
 
           // Set cookie
           ctx.res.setHeader("Set-Cookie", createAuthCookie(token));
@@ -131,8 +132,9 @@ export const appRouter = router({
             });
           }
 
-          // Create JWT token
-          const token = await createToken(user.id, user.email!);
+          // Create JWT token with admin flag for 10-minute timeout
+          const isAdmin = user.role === 'admin';
+          const token = await createToken(user.id, user.email!, isAdmin);
 
           // Set cookie
           ctx.res.setHeader("Set-Cookie", createAuthCookie(token));

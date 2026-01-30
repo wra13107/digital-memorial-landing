@@ -31,12 +31,16 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 
 /**
  * Create a JWT token
+ * @param userId - User ID
+ * @param email - User email
+ * @param isAdmin - Whether this is an admin token (10-minute expiry)
  */
-export async function createToken(userId: number, email: string): Promise<string> {
+export async function createToken(userId: number, email: string, isAdmin: boolean = false): Promise<string> {
   const secret = getJWTSecret();
-  const token = await new SignJWT({ userId, email })
+  const expiryTime = isAdmin ? "10m" : TOKEN_EXPIRY;
+  const token = await new SignJWT({ userId, email, isAdmin })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime(TOKEN_EXPIRY)
+    .setExpirationTime(expiryTime)
     .sign(secret);
   return token;
 }
@@ -44,11 +48,11 @@ export async function createToken(userId: number, email: string): Promise<string
 /**
  * Verify and decode a JWT token
  */
-export async function verifyToken(token: string): Promise<{ userId: number; email: string }> {
+export async function verifyToken(token: string): Promise<{ userId: number; email: string; isAdmin?: boolean }> {
   const secret = getJWTSecret();
   try {
     const verified = await jwtVerify(token, secret);
-    return verified.payload as { userId: number; email: string };
+    return verified.payload as { userId: number; email: string; isAdmin?: boolean };
   } catch (error) {
     throw new Error("Invalid or expired token");
   }

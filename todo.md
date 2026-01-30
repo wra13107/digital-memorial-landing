@@ -168,3 +168,20 @@
 - [x] Update admin user with username "Administrator" in database
 - [x] Test admin login with username and password
 - [x] Fix session persistence by updating authenticateRequest to support local JWT tokens
+
+
+## Phase 20: Admin Session Timeout (10 minutes)
+- [x] Implement session timeout logic for admin panel only
+- [x] Add session expiry tracking in JWT token
+- [x] Create logout on timeout functionality
+- [x] Add warning notification before timeout
+
+## Phase 21: User Account Management
+- [x] Create getUsersList procedure in server/routers.ts
+- [x] Create createUser procedure with validation
+- [x] Create updateUser procedure
+- [x] Create deleteUser procedure
+- [x] Build users list UI in admin panel
+- [x] Add user creation/editing form
+- [x] Add user deletion confirmation
+- [x] Test all CRUD operations

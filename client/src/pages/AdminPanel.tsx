@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,14 @@ import { Edit2, Trash2, LogOut, Plus, Search } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { NoindexHead } from "@/components/NoindexHead";
+import { trpc } from "@/lib/trpc";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AdminPanel() {
   return (
@@ -19,15 +27,96 @@ export default function AdminPanel() {
 function AdminPanelContent() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
-  const [users, setUsers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddUserForm, setShowAddUserForm] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
   const [newUser, setNewUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    role: "user" as "user" | "admin",
   });
+  const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [warningShown, setWarningShown] = useState(false);
+
+  // Fetch users list
+  const { data: users = [], isLoading, refetch } = trpc.admin.listUsers.useQuery();
+  
+  // Mutations
+  const createUserMutation = trpc.admin.createUser.useMutation({
+    onSuccess: () => {
+      refetch();
+      setShowAddUserForm(false);
+      setNewUser({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        role: "user",
+      });
+    },
+    onError: (error) => {
+      alert(`Ошибка: ${error.message}`);
+    },
+  });
+
+  const updateUserMutation = trpc.admin.updateUser.useMutation({
+    onSuccess: () => {
+      refetch();
+      setEditingUserId(null);
+    },
+    onError: (error) => {
+      alert(`Ошибка: ${error.message}`);
+    },
+  });
+
+  const deleteUserMutation = trpc.admin.deleteUser.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+    onError: (error) => {
+      alert(`Ошибка: ${error.message}`);
+    },
+  });
+
+  // Session timeout logic (10 minutes for admin only)
+  useEffect(() => {
+    if (user?.role !== "admin") return;
+
+    const resetTimeout = () => {
+      if (sessionTimeout) clearTimeout(sessionTimeout);
+      setWarningShown(false);
+
+      const warningTimeout = setTimeout(() => {
+        setWarningShown(true);
+      }, 9 * 60 * 1000); // 9 minutes
+
+      const logoutTimeout = setTimeout(() => {
+        logout();
+        navigate("/login");
+      }, 10 * 60 * 1000); // 10 minutes
+
+      setSessionTimeout(logoutTimeout);
+    };
+
+    const handleActivity = () => {
+      resetTimeout();
+    };
+
+    resetTimeout();
+
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keypress", handleActivity);
+    window.addEventListener("click", handleActivity);
+
+    return () => {
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("keypress", handleActivity);
+      window.removeEventListener("click", handleActivity);
+      if (sessionTimeout) clearTimeout(sessionTimeout);
+    };
+  }, [user?.role, logout, navigate, sessionTimeout]);
 
   // Check if user is admin
   if (user?.role !== "admin") {
@@ -59,30 +148,54 @@ function AdminPanelContent() {
       alert("Пожалуйста, заполните все поля");
       return;
     }
-    // TODO: Implement add user API call
-    setShowAddUserForm(false);
-    setNewUser({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
+
+    createUserMutation.mutate({
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+      password: newUser.password,
+      role: newUser.role,
+    });
+  };
+
+  const handleUpdateUser = (userId: number, updates: any) => {
+    updateUserMutation.mutate({
+      id: userId,
+      ...updates,
     });
   };
 
   const handleDeleteUser = (id: number) => {
     if (confirm("Вы уверены, что хотите удалить этого пользователя?")) {
-      // TODO: Implement delete user API call
-      setUsers(users.filter(u => u.id !== id));
+      deleteUserMutation.mutate({ id });
     }
   };
 
   const filteredUsers = users.filter(u =>
     `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
+      {/* Session Warning */}
+      {warningShown && (
+        <div className="fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 p-4 z-50">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <p className="text-yellow-800 font-semibold">
+              ⚠️ Ваша сессия истечет через 1 минуту. Нажмите любую клавишу для продления.
+            </p>
+            <Button
+              size="sm"
+              onClick={() => setWarningShown(false)}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+            >
+              Продлить
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-[#E8E8E8]">
         <div className="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
@@ -141,17 +254,27 @@ function AdminPanelContent() {
                 />
                 <Input
                   type="password"
-                  placeholder="Пароль"
+                  placeholder="Пароль (минимум 8 символов)"
                   value={newUser.password}
                   onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                 />
+                <Select value={newUser.role} onValueChange={(value: any) => setNewUser({ ...newUser, role: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите роль" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">Пользователь</SelectItem>
+                    <SelectItem value="admin">Администратор</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex gap-2">
                 <Button
                   onClick={handleAddUser}
+                  disabled={createUserMutation.isPending}
                   className="bg-[#C49F64] hover:bg-[#b8934f] text-white"
                 >
-                  Добавить
+                  {createUserMutation.isPending ? "Добавление..." : "Добавить"}
                 </Button>
                 <Button
                   onClick={() => setShowAddUserForm(false)}
@@ -179,7 +302,11 @@ function AdminPanelContent() {
           </div>
 
           {/* Users Table */}
-          {users.length === 0 ? (
+          {isLoading ? (
+            <Card className="p-8 text-center">
+              <p className="text-[#6E7A85]">Загрузка...</p>
+            </Card>
+          ) : filteredUsers.length === 0 ? (
             <Card className="p-8 text-center">
               <p className="text-[#6E7A85]">Пользователей не найдено</p>
             </Card>
@@ -218,6 +345,11 @@ function AdminPanelContent() {
                             size="sm"
                             variant="outline"
                             className="border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64]/10"
+                            onClick={() => {
+                              const newRole = u.role === "admin" ? "user" : "admin";
+                              handleUpdateUser(u.id, { role: newRole });
+                            }}
+                            disabled={updateUserMutation.isPending}
                           >
                             <Edit2 className="w-4 h-4" />
                           </Button>
@@ -226,6 +358,7 @@ function AdminPanelContent() {
                             variant="outline"
                             className="border-red-300 text-red-600 hover:bg-red-50"
                             onClick={() => handleDeleteUser(u.id)}
+                            disabled={deleteUserMutation.isPending}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

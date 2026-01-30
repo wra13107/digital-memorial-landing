@@ -5,7 +5,10 @@ import {
   updateUser,
   deleteUser,
   getUserById,
+  createLocalUser,
 } from "../db";
+import { hashPassword } from "../auth";
+import { TRPCError } from "@trpc/server";
 
 export const adminRouter = router({
   listUsers: adminProcedure.query(async () => {
@@ -40,5 +43,49 @@ export const adminRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       return await deleteUser(input.id);
+    }),
+
+  createUser: adminProcedure
+    .input(
+      z.object({
+        email: z.string().email("Invalid email address"),
+        password: z.string().min(8, "Password must be at least 8 characters"),
+        firstName: z.string().min(1, "First name is required"),
+        lastName: z.string().min(1, "Last name is required"),
+        role: z.enum(["user", "admin"]).optional().default("user"),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const passwordHash = await hashPassword(input.password);
+        const user = await createLocalUser({
+          email: input.email,
+          passwordHash,
+          firstName: input.firstName,
+          lastName: input.lastName,
+        });
+
+        // Update role if admin
+        if (input.role === "admin") {
+          await updateUser(user.id, { role: "admin" });
+        }
+
+        return {
+          success: true,
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: input.role,
+          },
+        };
+      } catch (error) {
+        console.error("[Admin] Create user error:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error instanceof Error ? error.message : "Failed to create user",
+        });
+      }
     }),
 });
