@@ -100,3 +100,14 @@
 - [x] Add MediaGallery component to Dashboard (photo, video, audio galleries)
 - [x] Implement tab navigation for media types (tabbed interface with Tabs component)
 - [x] Test media management in Dashboard (dev server running without errors)
+
+
+## Phase 13: Memorial Editor Form
+- [x] Create backend procedures for memorial details (create, update, get)
+- [x] Build memorial editor form component (MemorialEditor.tsx)
+- [x] Add text fields for burial place and biography
+- [x] Integrate interactive map for location selection (MapView component)
+- [x] Implement form validation and error handling
+- [x] Add form submission with API integration (tRPC mutations)
+- [x] Create unit tests for memorial operations (6 tests created)
+- [x] Test memorial editor functionality (routes added to App.tsx)

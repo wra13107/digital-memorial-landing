@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminPanel from "./pages/AdminPanel";
 import MemorialPage from "./pages/MemorialPage";
 import Profile from "./pages/Profile";
+import MemorialEditor from "./pages/MemorialEditor";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -40,6 +41,16 @@ function Router() {
         </ProtectedRoute>
       </Route>
       <Route path="/memorial/:id" component={MemorialPage} />
+      <Route path="/memorial-editor">
+        <ProtectedRoute>
+          <MemorialEditor />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/memorial-editor/:id">
+        <ProtectedRoute>
+          <MemorialEditor />
+        </ProtectedRoute>
+      </Route>
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
