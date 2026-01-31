@@ -473,7 +473,7 @@ export default function Home() {
               
               <div className="mb-6">
                 <p className="text-3xl font-bold text-[#2C353D] mb-2">
-                  999 ₽<span className="text-lg text-[#6E7A85]">/год</span>
+                  Бесплатно
                 </p>
               </div>
 
@@ -484,7 +484,7 @@ export default function Home() {
                 </li>
                 <li className="flex gap-2 text-[#6E7A85]">
                   <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
-                  Фото и видео
+                  10 Фото, без видео
                 </li>
                 <li className="flex gap-2 text-[#6E7A85]">
                   <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
