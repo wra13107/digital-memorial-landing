@@ -274,3 +274,17 @@
 - [x] Implement immediate deletion without confirmation prompts
 - [x] Create vitest tests for profile deletion (7 tests passing)
 - [x] Test profile deletion flow end-to-end
+
+
+## Phase 33: Remove Email Verification Functionality
+- [x] Remove email verification check from memorial creation API
+- [x] Remove VerificationBanner component from App.tsx
+- [x] Remove verification prompt from MemorialEditor page
+- [x] Remove VerifyEmail route from App.tsx
+- [x] Remove email verification fields from database schema (emailVerificationToken, emailVerificationExpiry, emailVerified)
+- [x] Push database migrations
+- [x] Remove email verification mutations (verifyEmail, resendVerificationEmail)
+- [x] Remove email verification functions from db.ts
+- [x] Update registration to skip verification
+- [x] Delete VerifyEmail.tsx page
+- [x] Dev server running cleanly without errors

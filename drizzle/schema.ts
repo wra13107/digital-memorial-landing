@@ -29,9 +29,6 @@ export const users = mysqlTable("users", {
   deathDate: timestamp("deathDate"),
   passwordResetToken: varchar("passwordResetToken", { length: 255 }).unique(),
   passwordResetExpiry: timestamp("passwordResetExpiry"),
-  emailVerificationToken: varchar("emailVerificationToken", { length: 255 }).unique(),
-  emailVerificationExpiry: timestamp("emailVerificationExpiry"),
-  emailVerified: boolean("emailVerified").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -39,6 +36,8 @@ export const users = mysqlTable("users", {
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
+
+
 
 /**
  * Memorials table - stores user memorial information

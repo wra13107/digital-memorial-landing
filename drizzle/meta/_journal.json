@@ -57,6 +57,13 @@
       "when": 1769856377761,
       "tag": "0007_thick_prodigy",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1769858369049,
+      "tag": "0008_flippant_white_queen",
+      "breakpoints": true
     }
   ]
 }

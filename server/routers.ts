@@ -4,9 +4,9 @@ import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
 import { z } from "zod";
-import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid, generateEmailVerificationToken, getEmailVerificationExpiry, isEmailVerificationTokenValid } from "./auth";
-import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, setEmailVerificationToken, getUserByEmailVerificationToken, markEmailAsVerified, deleteUserAccount, getMemorialsByUserId } from "./db";
-import { sendPasswordResetEmail, sendEmailVerificationEmail } from "./email";
+import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid } from "./auth";
+import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, deleteUserAccount, getMemorialsByUserId } from "./db";
+import { sendPasswordResetEmail } from "./email";
 import { TRPCError } from "@trpc/server";
 import { ENV } from "./_core/env";
 
@@ -65,30 +65,16 @@ export const appRouter = router({
             });
           }
 
-          // Generate email verification token
-          const verificationToken = generateEmailVerificationToken();
-          const verificationExpiry = getEmailVerificationExpiry();
-          await setEmailVerificationToken(user.id, verificationToken, verificationExpiry);
-
-          // Send verification email
-          const verificationUrl = `https://digimemorial-7bqi4qlk.manus.space/verify-email?token=${verificationToken}`;
-          await sendEmailVerificationEmail({
-            email: user.email!,
-            firstName: "User",
-            verificationToken,
-            verificationUrl,
-          });
-
+          // No email verification required - user can create memorials immediately
           return {
             success: true,
-            message: "Registration successful! Please check your email to verify your account.",
+            message: "Registration successful! You can now create memorials.",
             user: {
               id: user.id,
               email: user.email,
               phone: user.phone,
               countryCode: user.countryCode,
               role: user.role,
-              emailVerified: user.emailVerified,
             },
           };
         } catch (error) {
@@ -317,93 +303,7 @@ export const appRouter = router({
           });
         }
       }),
-    verifyEmail: publicProcedure
-      .input(
-        z.object({
-          email: z.string().email("Invalid email address"),
-          token: z.string().min(1, "Verification token is required"),
-        })
-      )
-      .mutation(async ({ input }) => {
-        try {
-          const user = await getUserByEmail(input.email);
-          if (!user) {
-            throw new TRPCError({
-              code: "NOT_FOUND",
-              message: "User not found",
-            });
-          }
-          if (user.emailVerificationToken !== input.token) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Invalid verification token",
-            });
-          }
-          if (!isEmailVerificationTokenValid(user.emailVerificationExpiry)) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Verification token has expired",
-            });
-          }
-          await markEmailAsVerified(user.id);
-          return { success: true, message: "Email has been verified successfully" };
-        } catch (error) {
-          if (error instanceof TRPCError) {
-            throw error;
-          }
-          console.error("[Auth] Email verification error:", error);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to verify email",
-          });
-        }
-      }),
-    resendVerificationEmail: publicProcedure
-      .input(
-        z.object({
-          email: z.string().email("Invalid email address"),
-        })
-      )
-      .mutation(async ({ input }) => {
-        try {
-          const user = await getUserByEmail(input.email);
-          if (!user) {
-            throw new TRPCError({
-              code: "NOT_FOUND",
-              message: "User not found",
-            });
-          }
-          if (user.emailVerified) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Email is already verified",
-            });
-          }
 
-          const verificationToken = generateEmailVerificationToken();
-          const verificationExpiry = getEmailVerificationExpiry();
-          await setEmailVerificationToken(user.id, verificationToken, verificationExpiry);
-
-          const verificationUrl = `https://digimemorial-7bqi4qlk.manus.space/verify-email?email=${encodeURIComponent(user.email!)}&token=${verificationToken}`;
-          await sendEmailVerificationEmail({
-            email: user.email!,
-            firstName: "User",
-            verificationToken,
-            verificationUrl,
-          });
-
-          return { success: true, message: "Verification email has been sent" };
-        } catch (error) {
-          if (error instanceof TRPCError) {
-            throw error;
-          }
-          console.error("[Auth] Resend verification email error:", error);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to resend verification email",
-          });
-        }
-      }),
     deleteAccount: protectedProcedure
       .mutation(async ({ input, ctx }) => {
         try {
