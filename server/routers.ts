@@ -30,11 +30,8 @@ export const appRouter = router({
         z.object({
           email: z.string().email("Invalid email address"),
           password: z.string().min(8, "Password must be at least 8 characters"),
-          firstName: z.string().min(1, "First name is required"),
-          lastName: z.string().min(1, "Last name is required"),
-          patronymic: z.string().optional(),
-          birthDate: z.date().optional(),
-          deathDate: z.date().optional(),
+          phone: z.string().min(1, "Phone number is required"),
+          countryCode: z.string().length(2, "Country code must be 2 characters"),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -55,11 +52,8 @@ export const appRouter = router({
           const result = await createLocalUser({
             email: input.email,
             passwordHash,
-            firstName: input.firstName,
-            lastName: input.lastName,
-            patronymic: input.patronymic,
-            birthDate: input.birthDate,
-            deathDate: input.deathDate,
+            phone: input.phone,
+            countryCode: input.countryCode,
           });
 
           // Get the created user
@@ -80,7 +74,7 @@ export const appRouter = router({
           const verificationUrl = `https://digimemorial-7bqi4qlk.manus.space/verify-email?token=${verificationToken}`;
           await sendEmailVerificationEmail({
             email: user.email!,
-            firstName: user.firstName || "User",
+            firstName: "User",
             verificationToken,
             verificationUrl,
           });
@@ -91,8 +85,8 @@ export const appRouter = router({
             user: {
               id: user.id,
               email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
+              phone: user.phone,
+              countryCode: user.countryCode,
               role: user.role,
               emailVerified: user.emailVerified,
             },

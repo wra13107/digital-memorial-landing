@@ -51,8 +51,8 @@ export const adminRouter = router({
       z.object({
         email: z.string().email("Invalid email address"),
         password: z.string().min(8, "Password must be at least 8 characters"),
-        firstName: z.string().min(1, "First name is required"),
-        lastName: z.string().min(1, "Last name is required"),
+        phone: z.string().optional(),
+        countryCode: z.string().optional(),
         role: z.enum(["user", "admin"]).optional().default("user"),
       })
     )
@@ -62,8 +62,8 @@ export const adminRouter = router({
         const user = await createLocalUser({
           email: input.email,
           passwordHash,
-          firstName: input.firstName,
-          lastName: input.lastName,
+          phone: input.phone || "+1",
+          countryCode: input.countryCode || "US",
         });
 
         // Update role if admin
@@ -75,8 +75,8 @@ export const adminRouter = router({
         const loginUrl = 'https://digimemorial-7bqi4qlk.manus.space/login';
         await sendWelcomeEmail({
           email: input.email,
-          firstName: input.firstName,
-          lastName: input.lastName,
+          firstName: "User",
+          lastName: "",
           password: input.password,
           loginUrl,
         });
@@ -86,8 +86,8 @@ export const adminRouter = router({
           user: {
             id: user.id,
             email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            phone: user.phone,
+            countryCode: user.countryCode,
             role: input.role,
           },
         };

@@ -103,22 +103,24 @@ export async function getUserById(id: number | string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function createMemorial(memorial: InsertMemorial) {
+export async function createMemorial(memorial: Omit<InsertMemorial, 'birthDate' | 'deathDate'> & { birthDate?: string | null; deathDate?: string | null }) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  // Ensure dates are valid Date objects
-  // SuperJSON serializes Date as ISO strings, we need to convert them back
+  // Convert date strings to Date objects
+  // MySQL TIMESTAMP format: YYYY-MM-DD HH:MM:SS (without milliseconds)
+  const convertToDate = (dateStr: string | null | undefined): Date | null | undefined => {
+    if (!dateStr) return undefined;
+    const [year, month, day] = dateStr.split('-');
+    return new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day)));
+  };
+
   const normalizedMemorial = {
     ...memorial,
-    birthDate: memorial.birthDate ? 
-      (memorial.birthDate instanceof Date ? memorial.birthDate : new Date(memorial.birthDate)) 
-      : undefined,
-    deathDate: memorial.deathDate ? 
-      (memorial.deathDate instanceof Date ? memorial.deathDate : new Date(memorial.deathDate)) 
-      : undefined,
+    birthDate: convertToDate(memorial.birthDate),
+    deathDate: convertToDate(memorial.deathDate),
   };
 
   try {
@@ -263,11 +265,8 @@ export async function getUserByUsername(username: string) {
 export async function createLocalUser(data: {
   email: string;
   passwordHash: string;
-  firstName: string;
-  lastName: string;
-  patronymic?: string;
-  birthDate?: Date;
-  deathDate?: Date;
+  phone: string;
+  countryCode: string;
 }) {
   const db = await getDb();
   if (!db) {
@@ -281,14 +280,10 @@ export async function createLocalUser(data: {
     openId,
     email: data.email,
     passwordHash: data.passwordHash,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    patronymic: data.patronymic,
-    birthDate: data.birthDate,
-    deathDate: data.deathDate,
+    phone: data.phone,
+    countryCode: data.countryCode,
     loginMethod: "local",
     role: "user",
-    name: `${data.firstName} ${data.lastName}`,
   });
 
   // Fetch and return the created user

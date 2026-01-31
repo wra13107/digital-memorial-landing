@@ -31,10 +31,10 @@ function AdminPanelContent() {
   const [showAddUserForm, setShowAddUserForm] = useState(false);
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
   const [newUser, setNewUser] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
     password: "",
+    phone: "",
+    countryCode: "US",
     role: "user" as "user" | "admin",
   });
   const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -49,10 +49,10 @@ function AdminPanelContent() {
       refetch();
       setShowAddUserForm(false);
       setNewUser({
-        firstName: "",
-        lastName: "",
         email: "",
         password: "",
+        phone: "",
+        countryCode: "US",
         role: "user",
       });
     },
@@ -144,16 +144,16 @@ function AdminPanelContent() {
   };
 
   const handleAddUser = async () => {
-    if (!newUser.firstName || !newUser.lastName || !newUser.email || !newUser.password) {
-      alert("Пожалуйста, заполните все поля");
+    if (!newUser.email || !newUser.password) {
+      alert("Пожалуйста, заполните email и пароль");
       return;
     }
 
     createUserMutation.mutate({
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
       email: newUser.email,
       password: newUser.password,
+      phone: newUser.phone,
+      countryCode: newUser.countryCode,
       role: newUser.role,
     });
   };
@@ -235,18 +235,6 @@ function AdminPanelContent() {
               <h3 className="text-lg font-bold text-[#2C353D] mb-4">Добавить нового пользователя</h3>
               <div className="grid md:grid-cols-2 gap-4 mb-4">
                 <Input
-                  type="text"
-                  placeholder="Имя"
-                  value={newUser.firstName}
-                  onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
-                />
-                <Input
-                  type="text"
-                  placeholder="Фамилия"
-                  value={newUser.lastName}
-                  onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
-                />
-                <Input
                   type="email"
                   placeholder="Email"
                   value={newUser.email}
@@ -257,6 +245,19 @@ function AdminPanelContent() {
                   placeholder="Пароль (минимум 8 символов)"
                   value={newUser.password}
                   onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                />
+                <Input
+                  type="tel"
+                  placeholder="Телефон"
+                  value={newUser.phone}
+                  onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                />
+                <Input
+                  type="text"
+                  placeholder="Код страны (US, RU, etc.)"
+                  value={newUser.countryCode}
+                  onChange={(e) => setNewUser({ ...newUser, countryCode: e.target.value.toUpperCase() })}
+                  maxLength={2}
                 />
                 <Select value={newUser.role} onValueChange={(value: any) => setNewUser({ ...newUser, role: value })}>
                   <SelectTrigger>
