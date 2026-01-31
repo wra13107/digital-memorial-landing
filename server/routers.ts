@@ -405,11 +405,6 @@ export const appRouter = router({
         }
       }),
     deleteAccount: protectedProcedure
-      .input(
-        z.object({
-          password: z.string().min(1, "Password is required"),
-        })
-      )
       .mutation(async ({ input, ctx }) => {
         try {
           if (!ctx.user) {
@@ -428,14 +423,7 @@ export const appRouter = router({
             });
           }
 
-          // Verify password
-          const isPasswordValid = await verifyPassword(input.password, user.passwordHash || "");
-          if (!isPasswordValid) {
-            throw new TRPCError({
-              code: "FORBIDDEN",
-              message: "Invalid password",
-            });
-          }
+          // No password verification required - delete immediately
 
           // Delete user account and all associated data
           await deleteUserAccount(user.id);

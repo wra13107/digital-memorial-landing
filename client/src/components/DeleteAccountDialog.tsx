@@ -8,7 +8,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
@@ -21,34 +20,22 @@ interface DeleteAccountDialogProps {
 
 export default function DeleteAccountDialog({ open, onOpenChange }: DeleteAccountDialogProps) {
   const [, navigate] = useLocation();
-  const [password, setPassword] = useState("");
-  const [confirmText, setConfirmText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const deleteAccountMutation = trpc.auth.deleteAccount.useMutation();
 
   const handleDelete = async () => {
-    if (confirmText !== "DELETE MY ACCOUNT") {
-      toast.error("Please type 'DELETE MY ACCOUNT' to confirm");
-      return;
-    }
-
-    if (!password) {
-      toast.error("Please enter your password");
-      return;
-    }
-
     setIsLoading(true);
     try {
-      await deleteAccountMutation.mutateAsync({ password });
-      toast.success("Your account has been deleted successfully");
+      await deleteAccountMutation.mutateAsync();
+      toast.success("Ваш профиль был успешно удален");
       
       // Redirect to home after 2 seconds
       setTimeout(() => {
         navigate("/");
       }, 2000);
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to delete account";
+      const errorMessage = error?.message || "Ошибка при удалении профиля";
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -56,10 +43,6 @@ export default function DeleteAccountDialog({ open, onOpenChange }: DeleteAccoun
   };
 
   const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      setPassword("");
-      setConfirmText("");
-    }
     onOpenChange(newOpen);
   };
 
@@ -67,9 +50,9 @@ export default function DeleteAccountDialog({ open, onOpenChange }: DeleteAccoun
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-red-600">Delete Account</DialogTitle>
+          <DialogTitle className="text-red-600">Удалить профиль</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. All your data will be permanently deleted.
+            Это действие нельзя отменить. Все ваши данные будут окончательно удалены.
           </DialogDescription>
         </DialogHeader>
 
@@ -77,42 +60,14 @@ export default function DeleteAccountDialog({ open, onOpenChange }: DeleteAccoun
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-red-700">
-              <p className="font-semibold mb-1">Warning:</p>
-              <p>Deleting your account will permanently remove:</p>
+              <p className="font-semibold mb-1">Внимание:</p>
+              <p>Удаление профиля приведет к окончательному удалению:</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
-                <li>Your profile and personal information</li>
-                <li>All memorials you created</li>
-                <li>All gallery items and photos</li>
-                <li>All account data</li>
+                <li>Вашего профиля и личной информации</li>
+                <li>Всех созданных мемориалов</li>
+                <li>Всех фото, видео и аудиозаписей</li>
+                <li>Всех данных учетной записи</li>
               </ul>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">
-                Enter your password to confirm
-              </label>
-              <Input
-                type="password"
-                placeholder="Your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">
-                Type "DELETE MY ACCOUNT" to confirm
-              </label>
-              <Input
-                type="text"
-                placeholder="DELETE MY ACCOUNT"
-                value={confirmText}
-                onChange={(e) => setConfirmText(e.target.value.toUpperCase())}
-                disabled={isLoading}
-              />
             </div>
           </div>
         </div>
@@ -123,20 +78,20 @@ export default function DeleteAccountDialog({ open, onOpenChange }: DeleteAccoun
             onClick={() => handleOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            Отмена
           </Button>
           <Button
             variant="destructive"
             onClick={handleDelete}
-            disabled={isLoading || confirmText !== "DELETE MY ACCOUNT" || !password}
+            disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Deleting...
+                Удаление...
               </>
             ) : (
-              "Delete Account"
+              "Удалить профиль"
             )}
           </Button>
         </DialogFooter>

@@ -265,3 +265,12 @@
 - [x] Improve error handling in MemorialEditor to show verification message
 - [x] Create vitest tests for email verification blocking (5 tests passing)
 - [x] Test memorial creation blocking for unverified users
+
+
+## Phase 32: Profile Deletion Without Confirmation
+- [x] Update deleteAccount procedure to not require password input
+- [x] Simplify DeleteAccountDialog to remove password and confirmation text fields
+- [x] Add delete profile button to Dashboard dropdown menu (Trash2 icon)
+- [x] Implement immediate deletion without confirmation prompts
+- [x] Create vitest tests for profile deletion (7 tests passing)
+- [x] Test profile deletion flow end-to-end
