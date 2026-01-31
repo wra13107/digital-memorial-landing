@@ -272,7 +272,7 @@ export default function Home() {
             <div className="flex justify-center" data-aos="fade-up" data-aos-duration="800">
               <div className="relative">
                 <img
-                  src="/images/smartphone-memorial-interface.jpg"
+                  src="/images/smartphone-memorial-interface-ru.webp"
                   alt="Memorial interface on smartphone"
                   className="w-full max-w-sm shadow-2xl rounded-3xl"
                 />
