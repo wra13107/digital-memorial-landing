@@ -369,3 +369,34 @@ export async function markEmailAsVerified(userId: number): Promise<void> {
     emailVerificationExpiry: null,
   }).where(eq(users.id, userId));
 }
+
+
+/**
+ * Delete user account and all associated data (memorials, gallery items)
+ */
+export async function deleteUserAccount(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    // Delete all gallery items for user's memorials
+    const userMemorials = await db.select({ id: memorials.id }).from(memorials).where(eq(memorials.userId, userId));
+    
+    for (const memorial of userMemorials) {
+      await db.delete(galleryItems).where(eq(galleryItems.memorialId, memorial.id));
+    }
+
+    // Delete all memorials for the user
+    await db.delete(memorials).where(eq(memorials.userId, userId));
+
+    // Delete the user
+    await db.delete(users).where(eq(users.id, userId));
+
+    console.log(`[Database] User ${userId} and all associated data deleted successfully`);
+  } catch (error) {
+    console.error("[Database] Error deleting user account:", error);
+    throw new Error("Failed to delete user account");
+  }
+}

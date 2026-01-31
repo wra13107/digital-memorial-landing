@@ -3,10 +3,11 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2, Edit2, X, Save, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Edit2, X, Save, Loader2, Trash2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { NoindexHead } from "@/components/NoindexHead";
+import DeleteAccountDialog from "@/components/DeleteAccountDialog";
 
 export default function Profile() {
   return (
@@ -23,6 +24,7 @@ function ProfileContent() {
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -39,6 +41,9 @@ function ProfileContent() {
 
   // Update profile mutation
   const updateProfileMutation = trpc.auth.updateProfile.useMutation();
+
+  // Delete account mutation
+  const deleteAccountMutation = trpc.auth.deleteAccount.useMutation();
 
   // Initialize form with user data
   useEffect(() => {
@@ -338,7 +343,33 @@ function ProfileContent() {
             )}
           </div>
         </Card>
+
+        {/* Delete Account Section */}
+        <Card className="p-6 bg-red-50 border-red-200">
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-red-700 mb-2">Danger Zone</h3>
+              <p className="text-sm text-red-600 mb-4">
+                Permanently delete your account and all associated data. This action cannot be undone.
+              </p>
+            </div>
+            <Button
+              onClick={() => setDeleteDialogOpen(true)}
+              variant="destructive"
+              className="w-full"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete My Account
+            </Button>
+          </div>
+        </Card>
       </div>
+
+      {/* Delete Account Dialog */}
+      <DeleteAccountDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+      />
     </div>
   );
 }

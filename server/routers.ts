@@ -5,7 +5,7 @@ import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
 import { z } from "zod";
 import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid, generateEmailVerificationToken, getEmailVerificationExpiry, isEmailVerificationTokenValid } from "./auth";
-import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, setEmailVerificationToken, getUserByEmailVerificationToken, markEmailAsVerified } from "./db";
+import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, setEmailVerificationToken, getUserByEmailVerificationToken, markEmailAsVerified, deleteUserAccount } from "./db";
 import { sendPasswordResetEmail, sendEmailVerificationEmail } from "./email";
 import { TRPCError } from "@trpc/server";
 import { ENV } from "./_core/env";
@@ -354,6 +354,57 @@ export const appRouter = router({
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to verify email",
+          });
+        }
+      }),
+    deleteAccount: protectedProcedure
+      .input(
+        z.object({
+          password: z.string().min(1, "Password is required"),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        try {
+          if (!ctx.user) {
+            throw new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "User not authenticated",
+            });
+          }
+
+          // Get user from database to verify password
+          const user = await getUserById(ctx.user.id);
+          if (!user) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "User not found",
+            });
+          }
+
+          // Verify password
+          const isPasswordValid = await verifyPassword(input.password, user.passwordHash || "");
+          if (!isPasswordValid) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "Invalid password",
+            });
+          }
+
+          // Delete user account and all associated data
+          await deleteUserAccount(user.id);
+
+          // Clear auth cookie
+          ctx.res.setHeader("Set-Cookie", `${COOKIE_NAME}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC; HttpOnly; Secure; SameSite=Strict`);
+
+          return { success: true, message: "Account has been deleted successfully" };
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[Auth] Delete account error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to delete account",
           });
         }
       }),

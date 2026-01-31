@@ -215,3 +215,13 @@
 - [x] Build email verification page UI
 - [x] Update registration form to show verification pending message
 - [x] Test email verification flow end-to-end
+
+
+## Phase 25: Account Deletion
+- [x] Create deleteAccount procedure in server/routers.ts
+- [x] Create cascading delete functions in server/db.ts (delete memorials, gallery items, user)
+- [x] Build account deletion confirmation dialog UI
+- [x] Add delete account button to user profile page
+- [x] Implement password verification before deletion
+- [x] Add success message and redirect after deletion
+- [x] Test account deletion flow end-to-end
