@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit2, Trash2, LogOut, Image, Video, Music } from "lucide-react";
+import { Plus, Edit2, Trash2, LogOut, Image, Video, Music, Trash } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MediaUpload } from "@/components/MediaUpload";
 import { MediaGallery } from "@/components/MediaGallery";
 import { NoindexHead } from "@/components/NoindexHead";
+import DeleteAccountDialog from "@/components/DeleteAccountDialog";
 
 
 export default function Dashboard() {
@@ -25,6 +26,7 @@ function DashboardContent() {
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("profile");
   const [memorials, setMemorials] = useState<any[]>([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Fetch gallery items - requires memorialId, so we'll skip for now
   const { data: galleryItems = [] } = trpc.memorials.getGalleryItems.useQuery(
@@ -76,14 +78,24 @@ function DashboardContent() {
               Добро пожаловать, {user?.firstName} {user?.lastName}
             </p>
           </div>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64]/10"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Выход
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64]/10"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Выход
+            </Button>
+            <Button
+              onClick={() => setDeleteDialogOpen(true)}
+              variant="outline"
+              className="border-red-300 text-red-600 hover:bg-red-50"
+            >
+              <Trash className="w-4 h-4 mr-2" />
+              Удалить профиль
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -226,6 +238,9 @@ function DashboardContent() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Delete Account Dialog */}
+      <DeleteAccountDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} />
     </div>
   );
 }
