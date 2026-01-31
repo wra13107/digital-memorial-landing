@@ -267,79 +267,93 @@ export default function Home() {
             Цифровая капсула памяти
           </h2>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Smartphone Image */}
-            <div className="flex justify-center" data-aos="fade-up" data-aos-duration="800">
-              <div className="relative">
-                <img
-                  src="/images/smartphone-memorial-interface-ru.webp"
-                  alt="Memorial interface on smartphone"
-                  className="w-full max-w-sm shadow-2xl rounded-3xl"
-                />
+          <div className="flex flex-col items-center">
+            {/* Features Grid - Left and Right */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-8 items-start">
+              {/* Left Column Features */}
+              <div className="space-y-8" data-aos="fade-up" data-aos-duration="800">
+                {/* Feature 1: Voice */}
+                <div className="text-right">
+                  <div className="flex justify-end gap-4 items-start">
+                    <div>
+                      <h4 className="text-xl font-bold text-[#2C353D] mb-2">Голос</h4>
+                      <p className="text-[#6E7A85]">
+                        Загрузите аудиосообщения или видео. Услышьте родной голос снова.
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
+                      <Music className="w-6 h-6 text-[#C49F64]" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature 2: Location */}
+                <div className="text-right">
+                  <div className="flex justify-end gap-4 items-start">
+                    <div>
+                      <h4 className="text-xl font-bold text-[#2C353D] mb-2">Геолокация</h4>
+                      <p className="text-[#6E7A85]">
+                        Точные координаты захоронения для дальних родственников.
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-[#C49F64]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Center - Smartphone Image */}
+              <div className="flex justify-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+                <div className="relative">
+                  <img
+                    src="/images/smartphone-memorial-interface-ru.webp"
+                    alt="Memorial interface on smartphone"
+                    className="w-full max-w-sm shadow-2xl rounded-3xl"
+                  />
+                </div>
+              </div>
+
+              {/* Right Column Features */}
+              <div className="space-y-8" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                {/* Feature 3: Candle */}
+                <div className="text-left">
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
+                      <Heart className="w-6 h-6 text-[#C49F64]" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-[#2C353D] mb-2">Книга памяти</h4>
+                      <p className="text-[#6E7A85]">
+                        Друзья могут зажечь виртуальную свечу и написать слова поддержки.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature 4: Family Tree */}
+                <div className="text-left">
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
+                      <Users className="w-6 h-6 text-[#C49F64]" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-[#2C353D] mb-2">Семейное древо</h4>
+                      <p className="text-[#6E7A85]">
+                        Связи между профилями членов семьи.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Features */}
-            <div className="space-y-8" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
-              {/* Feature 1: Voice */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
-                  <Music className="w-6 h-6 text-[#C49F64]" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#2C353D] mb-2">Голос</h4>
-                  <p className="text-[#6E7A85]">
-                    Загрузите аудиосообщения или видео. Услышьте родной голос снова.
-                  </p>
-                </div>
-              </div>
-
-              {/* Feature 2: Location */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-[#C49F64]" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#2C353D] mb-2">Геолокация</h4>
-                  <p className="text-[#6E7A85]">
-                    Точные координаты захоронения для дальних родственников.
-                  </p>
-                </div>
-              </div>
-
-              {/* Feature 3: Candle */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-[#C49F64]" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#2C353D] mb-2">Книга памяти</h4>
-                  <p className="text-[#6E7A85]">
-                    Друзья могут зажечь виртуальную свечу и написать слова поддержки.
-                  </p>
-                </div>
-              </div>
-
-              {/* Feature 4: Family Tree */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#C49F64]/20 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-[#C49F64]" />
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-[#2C353D] mb-2">Семейное древо</h4>
-                  <p className="text-[#6E7A85]">
-                    Связи между профилями членов семьи.
-                  </p>
-                </div>
-              </div>
-
-              {/* Audio Link */}
-              <div className="pt-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
-                <button className="text-[#C49F64] font-semibold hover:underline flex items-center gap-2">
-                  <Play className="w-4 h-4" />
-                  Послушать пример аудиозаписи
-                </button>
-              </div>
+            {/* Audio Link */}
+            <div className="pt-4" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+              <button className="text-[#C49F64] font-semibold hover:underline flex items-center gap-2">
+                <Play className="w-4 h-4" />
+                Послушать пример аудиозаписи
+              </button>
             </div>
           </div>
         </div>
