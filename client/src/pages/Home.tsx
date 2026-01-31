@@ -465,7 +465,7 @@ export default function Home() {
             Выберите подходящий тариф
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Plan 1: Subscription */}
             <div className="bg-white rounded-lg p-8 shadow-md border border-[#E8E8E8]" data-aos="fade-up" data-aos-duration="800">
               <h3 className="text-2xl font-bold text-[#2C353D] mb-4">Подписка</h3>
@@ -497,7 +497,42 @@ export default function Home() {
               </Button>
             </div>
 
-            {/* Plan 2: Legacy (Featured) */}
+            {/* Plan 2: Память */}
+            <div className="bg-white rounded-lg p-8 shadow-md border border-[#E8E8E8]" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+              <h3 className="text-2xl font-bold text-[#2C353D] mb-4">Память</h3>
+              <p className="text-[#6E7A85] mb-6">Для одного близкого человека</p>
+              
+              <div className="mb-6">
+                <p className="text-3xl font-bold text-[#2C353D] mb-2">
+                  899 ₽<span className="text-lg text-[#6E7A85]">/год</span>
+                </p>
+              </div>
+
+              <ul className="space-y-3 mb-8">
+                <li className="flex gap-2 text-[#6E7A85]">
+                  <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
+                  1 мемориал
+                </li>
+                <li className="flex gap-2 text-[#6E7A85]">
+                  <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
+                  Цифровая страница памяти
+                </li>
+                <li className="flex gap-2 text-[#6E7A85]">
+                  <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
+                  50 Фото, 5 видео
+                </li>
+                <li className="flex gap-2 text-[#6E7A85]">
+                  <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
+                  Стандартная поддержка
+                </li>
+              </ul>
+
+              <Button variant="outline" className="w-full border-[#C49F64] text-[#C49F64]">
+                Выбрать
+              </Button>
+            </div>
+
+            {/* Plan 3: Legacy (Featured) */}
             <div className="bg-gradient-to-br from-[#C49F64]/10 to-[#C49F64]/5 rounded-lg p-8 shadow-lg border-2 border-[#C49F64] relative" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
               <div className="absolute -top-4 left-6 bg-[#C49F64] text-white px-4 py-1 rounded-full text-sm font-semibold">
                 Выбор 95% семей
