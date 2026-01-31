@@ -139,8 +139,9 @@ export default function MemorialEditor() {
     try {
       if (memorialId) {
         // Update existing memorial
-        const birthDate = formData.birthDate ? new Date(formData.birthDate) : undefined;
-        const deathDate = formData.deathDate ? new Date(formData.deathDate) : undefined;
+        // Send dates as ISO strings
+        const birthDate = formData.birthDate ? new Date(formData.birthDate).toISOString().split('T')[0] : undefined;
+        const deathDate = formData.deathDate ? new Date(formData.deathDate).toISOString().split('T')[0] : undefined;
         
         await updateMutation.mutateAsync({
           id: memorialId,
@@ -158,9 +159,9 @@ export default function MemorialEditor() {
         navigate("/dashboard");
       } else {
         // Create new memorial
-        // Convert date strings to Date objects for proper serialization
-        const birthDate = formData.birthDate ? new Date(formData.birthDate) : undefined;
-        const deathDate = formData.deathDate ? new Date(formData.deathDate) : undefined;
+        // Send dates as ISO strings
+        const birthDate = formData.birthDate ? new Date(formData.birthDate).toISOString().split('T')[0] : undefined;
+        const deathDate = formData.deathDate ? new Date(formData.deathDate).toISOString().split('T')[0] : undefined;
         
         const result = await createMutation.mutateAsync({
           lastName: formData.lastName,
