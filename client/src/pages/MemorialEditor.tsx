@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, MapPin, Loader2, Image, Video, Music } from "lucide-react";
+import { ArrowLeft, MapPin, Loader2, Image, Video, Music, AlertCircle } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -27,6 +27,38 @@ interface MemorialFormData {
 export default function MemorialEditor() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
+
+  // Check if user's email is verified
+  if (user && !user.emailVerified) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center px-4">
+        <Card className="max-w-md w-full p-8 text-center">
+          <div className="mb-6">
+            <div className="w-16 h-16 bg-[#C49F64]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-[#C49F64]" />
+            </div>
+            <h2 className="text-2xl font-bold text-[#2C353D] mb-2">Подтвердите email</h2>
+            <p className="text-[#6E7A85] mb-6">
+              Перед созданием мемориала необходимо подтвердить ваш адрес электронной почты. Проверьте вашу почту и перейдите по ссылке подтверждения.
+            </p>
+            <Button
+              onClick={() => navigate("/verify-email")}
+              className="w-full bg-[#C49F64] hover:bg-[#b8934f] text-white font-semibold"
+            >
+              Перейти к подтверждению
+            </Button>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="w-full mt-3 text-[#C49F64] font-semibold hover:underline"
+            >
+              Вернуться на главную
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   const [memorialId, setMemorialId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [mapCenter, setMapCenter] = useState({ lat: 55.7558, lng: 37.6173 }); // Moscow default
@@ -191,7 +223,12 @@ export default function MemorialEditor() {
       }
     } catch (error) {
       console.error("Error saving memorial:", error);
-      setErrors({ submit: "Ошибка при сохранении мемориала" });
+      
+      if (error instanceof Error && error.message.includes("verify your email")) {
+        setErrors({ submit: "Пожалуйста, подтвердите ваш email адрес перед созданием мемориала." });
+      } else {
+        setErrors({ submit: "Ошибка при сохранении мемориала" });
+      }
     } finally {
       setIsLoading(false);
     }

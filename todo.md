@@ -256,3 +256,12 @@
 - [ ] Implement media preview gallery on creation page
 - [ ] Save uploaded media when memorial is created
 - [ ] Test photo and video upload on memorial creation
+
+
+## Phase 31: Block Memorial Creation Until Email Verified
+- [x] Add email verification check in memorials.create procedure (server/routers/memorials.ts)
+- [x] Add verification status banner in App.tsx (VerificationBanner component)
+- [x] Add verification prompt in MemorialEditor page
+- [x] Improve error handling in MemorialEditor to show verification message
+- [x] Create vitest tests for email verification blocking (5 tests passing)
+- [x] Test memorial creation blocking for unverified users

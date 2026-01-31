@@ -20,6 +20,30 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useAuth } from "./_core/hooks/useAuth";
+import { AlertCircle } from "lucide-react";
+
+function VerificationBanner() {
+  const { user } = useAuth();
+
+  if (!user || user.emailVerified) {
+    return null;
+  }
+
+  return (
+    <div className="bg-amber-50 border-b border-amber-200 px-4 py-3">
+      <div className="max-w-6xl mx-auto flex items-center gap-3">
+        <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+        <p className="text-sm text-amber-800">
+          Пожалуйста, подтвердите ваш email адрес для создания мемориалов.
+          <a href="/verify-email" className="font-semibold underline ml-2 hover:text-amber-900">
+            Перейти к подтверждению
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -91,6 +115,7 @@ function App() {
         >
           <TooltipProvider>
             <AOSInitializer />
+            <VerificationBanner />
             <Toaster />
             <Router />
           </TooltipProvider>

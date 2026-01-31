@@ -28,6 +28,14 @@ export const memorialsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Check if user's email is verified
+      if (!ctx.user.emailVerified) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Please verify your email address before creating a memorial. Check your inbox for the verification email.",
+        });
+      }
+
       return await createMemorial({
         userId: ctx.user.id,
         lastName: input.lastName,
