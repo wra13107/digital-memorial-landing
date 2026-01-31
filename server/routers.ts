@@ -320,16 +320,23 @@ export const appRouter = router({
     verifyEmail: publicProcedure
       .input(
         z.object({
+          email: z.string().email("Invalid email address"),
           token: z.string().min(1, "Verification token is required"),
         })
       )
       .mutation(async ({ input }) => {
         try {
-          const user = await getUserByEmailVerificationToken(input.token);
+          const user = await getUserByEmail(input.email);
           if (!user) {
             throw new TRPCError({
               code: "NOT_FOUND",
-              message: "Invalid or expired verification token",
+              message: "User not found",
+            });
+          }
+          if (user.emailVerificationToken !== input.token) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Invalid verification token",
             });
           }
           if (!isEmailVerificationTokenValid(user.emailVerificationExpiry)) {
@@ -348,6 +355,52 @@ export const appRouter = router({
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to verify email",
+          });
+        }
+      }),
+    resendVerificationEmail: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email("Invalid email address"),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          const user = await getUserByEmail(input.email);
+          if (!user) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "User not found",
+            });
+          }
+          if (user.emailVerified) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Email is already verified",
+            });
+          }
+
+          const verificationToken = generateEmailVerificationToken();
+          const verificationExpiry = getEmailVerificationExpiry();
+          await setEmailVerificationToken(user.id, verificationToken, verificationExpiry);
+
+          const verificationUrl = `https://digimemorial-7bqi4qlk.manus.space/verify-email?email=${encodeURIComponent(user.email!)}&token=${verificationToken}`;
+          await sendEmailVerificationEmail({
+            email: user.email!,
+            firstName: "User",
+            verificationToken,
+            verificationUrl,
+          });
+
+          return { success: true, message: "Verification email has been sent" };
+        } catch (error) {
+          if (error instanceof TRPCError) {
+            throw error;
+          }
+          console.error("[Auth] Resend verification email error:", error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to resend verification email",
           });
         }
       }),

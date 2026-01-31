@@ -89,10 +89,10 @@ export default function Register() {
         confirmPassword: "",
       });
       
-      // Redirect to login after 3 seconds
+      // Redirect to verify-email page after 2 seconds
       setTimeout(() => {
-        navigate("/login");
-      }, 3000);
+        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+      }, 2000);
     } catch (err: any) {
       const errorMessage = err?.message || "Ошибка при регистрации";
       setError(errorMessage);
