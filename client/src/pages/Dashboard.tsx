@@ -38,11 +38,11 @@ function DashboardContent() {
   };
 
   const handleCreateMemorial = () => {
-    navigate("/create-memorial");
+    navigate("/memorial-editor");
   };
 
   const handleEditMemorial = (id: string) => {
-    navigate(`/edit-memorial/${id}`);
+    navigate(`/memorial-editor/${id}`);
   };
 
   const handleDeleteMemorial = (id: string) => {

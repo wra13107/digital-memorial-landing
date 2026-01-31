@@ -232,3 +232,9 @@
 - [x] Add 'View My Memorial' button in dashboard
 - [x] Add memorial link in user profile page
 - [x] Test navigation to public memorial page
+
+
+## Phase 27: Fix Create Memorial Navigation
+- [x] Fix "Create Memorial" button route from /create-memorial to /memorial-editor
+- [x] Fix "Edit Memorial" button route from /edit-memorial/:id to /memorial-editor/:id
+- [x] Test navigation to memorial editor page
