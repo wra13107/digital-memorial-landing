@@ -225,3 +225,10 @@
 - [x] Implement password verification before deletion
 - [x] Add success message and redirect after deletion
 - [x] Test account deletion flow end-to-end
+
+
+## Phase 26: Navigation to Public Memorial Page
+- [x] Create procedure to get user's memorial(s)
+- [x] Add 'View My Memorial' button in dashboard
+- [x] Add memorial link in user profile page
+- [x] Test navigation to public memorial page

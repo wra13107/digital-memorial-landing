@@ -5,7 +5,7 @@ import { memorialsRouter } from "./routers/memorials";
 import { adminRouter } from "./routers/admin";
 import { z } from "zod";
 import { hashPassword, verifyPassword, createToken, createAuthCookie, generatePasswordResetToken, getPasswordResetExpiry, isPasswordResetTokenValid, generateEmailVerificationToken, getEmailVerificationExpiry, isEmailVerificationTokenValid } from "./auth";
-import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, setEmailVerificationToken, getUserByEmailVerificationToken, markEmailAsVerified, deleteUserAccount } from "./db";
+import { getUserByEmail, createLocalUser, getUserById, updateUser, setPasswordResetToken, getUserByPasswordResetToken, clearPasswordResetToken, updateUserPassword, setEmailVerificationToken, getUserByEmailVerificationToken, markEmailAsVerified, deleteUserAccount, getMemorialsByUserId } from "./db";
 import { sendPasswordResetEmail, sendEmailVerificationEmail } from "./email";
 import { TRPCError } from "@trpc/server";
 import { ENV } from "./_core/env";
@@ -408,6 +408,28 @@ export const appRouter = router({
           });
         }
       }),
+    getUserMemorials: protectedProcedure.query(async ({ ctx }) => {
+      try {
+        if (!ctx.user) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "User not authenticated",
+          });
+        }
+
+        const memorials = await getMemorialsByUserId(ctx.user.id);
+        return memorials;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        console.error("[Auth] Get user memorials error:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to get memorials",
+        });
+      }
+    }),
   }),
   memorials: memorialsRouter,
   admin: adminRouter,

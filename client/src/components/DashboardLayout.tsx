@@ -21,11 +21,12 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Heart } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import { trpc } from "@/lib/trpc";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Page 1", path: "/" },
@@ -114,6 +115,7 @@ function DashboardLayoutContent({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
+  const { data: memorials } = trpc.auth.getUserMemorials.useQuery();
 
   useEffect(() => {
     if (isCollapsed) {
@@ -221,6 +223,18 @@ function DashboardLayoutContent({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
+                {memorials && memorials.length > 0 && (
+                  <>
+                    <DropdownMenuItem
+                      onClick={() => setLocation(`/memorial/${memorials[0].id}`)}
+                      className="cursor-pointer"
+                    >
+                      <Heart className="mr-2 h-4 w-4" />
+                      <span>View My Memorial</span>
+                    </DropdownMenuItem>
+                    <div className="my-1 h-px bg-border" />
+                  </>
+                )}
                 <DropdownMenuItem
                   onClick={logout}
                   className="cursor-pointer text-destructive focus:text-destructive"
