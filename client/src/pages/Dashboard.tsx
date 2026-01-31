@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit2, Trash2, LogOut, Image, Video, Music, Trash } from "lucide-react";
+import { Plus, Edit2, Trash2, LogOut, Image, Video, Music, Trash, Search, Users as UsersIcon } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -10,6 +10,8 @@ import { MediaUpload } from "@/components/MediaUpload";
 import { MediaGallery } from "@/components/MediaGallery";
 import { NoindexHead } from "@/components/NoindexHead";
 import DeleteAccountDialog from "@/components/DeleteAccountDialog";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 export default function Dashboard() {
@@ -27,12 +29,63 @@ function DashboardContent() {
   const [activeTab, setActiveTab] = useState("profile");
   const [memorials, setMemorials] = useState<any[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAddUserForm, setShowAddUserForm] = useState(false);
+  const [newUser, setNewUser] = useState({
+    email: "",
+    password: "",
+    phone: "",
+    countryCode: "US",
+    role: "user" as "user" | "admin",
+  });
 
   // Fetch gallery items - requires memorialId, so we'll skip for now
   const { data: galleryItems = [] } = trpc.memorials.getGalleryItems.useQuery(
     { memorialId: 0 },
     { enabled: false }
   );
+
+  // Fetch users list (for admins only)
+  const { data: users = [], isLoading: usersLoading, refetch: refetchUsers } = trpc.admin.listUsers.useQuery(
+    undefined,
+    { enabled: user?.role === "admin" }
+  );
+
+  // User management mutations
+  const createUserMutation = trpc.admin.createUser.useMutation({
+    onSuccess: () => {
+      refetchUsers();
+      setShowAddUserForm(false);
+      setNewUser({
+        email: "",
+        password: "",
+        phone: "",
+        countryCode: "US",
+        role: "user",
+      });
+    },
+    onError: (error) => {
+      alert(`Ошибка: ${error.message}`);
+    },
+  });
+
+  const updateUserMutation = trpc.admin.updateUser.useMutation({
+    onSuccess: () => {
+      refetchUsers();
+    },
+    onError: (error) => {
+      alert(`Ошибка: ${error.message}`);
+    },
+  });
+
+  const deleteUserMutation = trpc.admin.deleteUser.useMutation({
+    onSuccess: () => {
+      refetchUsers();
+    },
+    onError: (error) => {
+      alert(`Ошибка: ${error.message}`);
+    },
+  });
 
   const handleLogout = async () => {
     await logout();
@@ -62,10 +115,44 @@ function DashboardContent() {
     console.log("Media deleted successfully");
   };
 
+  const handleAddUser = async () => {
+    if (!newUser.email || !newUser.password) {
+      alert("Пожалуйста, заполните email и пароль");
+      return;
+    }
+
+    createUserMutation.mutate({
+      email: newUser.email,
+      password: newUser.password,
+      phone: newUser.phone,
+      countryCode: newUser.countryCode,
+      role: newUser.role,
+    });
+  };
+
+  const handleUpdateUser = (userId: number, updates: any) => {
+    updateUserMutation.mutate({
+      id: userId,
+      ...updates,
+    });
+  };
+
+  const handleDeleteUser = (id: number) => {
+    if (confirm("Вы уверены, что хотите удалить этого пользователя?")) {
+      deleteUserMutation.mutate({ id });
+    }
+  };
+
   // Filter gallery items by type
   const photos = (galleryItems as any[]).filter((item: any) => item.type === "photo");
   const videos = (galleryItems as any[]).filter((item: any) => item.type === "video");
   const audios = (galleryItems as any[]).filter((item: any) => item.type === "audio");
+
+  // Filter users by search term
+  const filteredUsers = users.filter(u =>
+    `${u.firstName} ${u.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -101,10 +188,13 @@ function DashboardContent() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className={`grid w-full ${user?.role === "admin" ? "grid-cols-3" : "grid-cols-2"} mb-6`}>
             <TabsTrigger value="profile">Профиль</TabsTrigger>
             <TabsTrigger value="memorials">Мемориалы</TabsTrigger>
+            {user?.role === "admin" && (
+              <TabsTrigger value="users">Пользователи</TabsTrigger>
+            )}
           </TabsList>
 
           {/* Profile Tab */}
@@ -236,6 +326,165 @@ function DashboardContent() {
               </div>
             )}
           </TabsContent>
+
+          {/* Users Tab - Only for Admins */}
+          {user?.role === "admin" && (
+            <TabsContent value="users" className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-[#2C353D]">Управление пользователями</h2>
+                <Button
+                  onClick={() => setShowAddUserForm(!showAddUserForm)}
+                  className="bg-[#C49F64] hover:bg-[#b8934f] text-white"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Добавить пользователя
+                </Button>
+              </div>
+
+              {/* Add User Form */}
+              {showAddUserForm && (
+                <Card className="p-6">
+                  <h3 className="text-lg font-bold text-[#2C353D] mb-4">Добавить нового пользователя</h3>
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      value={newUser.email}
+                      onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Пароль (минимум 8 символов)"
+                      value={newUser.password}
+                      onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                    />
+                    <Input
+                      type="tel"
+                      placeholder="Телефон"
+                      value={newUser.phone}
+                      onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                    />
+                    <Input
+                      type="text"
+                      placeholder="Код страны (US, RU, etc.)"
+                      value={newUser.countryCode}
+                      onChange={(e) => setNewUser({ ...newUser, countryCode: e.target.value.toUpperCase() })}
+                      maxLength={2}
+                    />
+                    <Select value={newUser.role} onValueChange={(value: any) => setNewUser({ ...newUser, role: value })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Выберите роль" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">Пользователь</SelectItem>
+                        <SelectItem value="admin">Администратор</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleAddUser}
+                      disabled={createUserMutation.isPending}
+                      className="bg-[#C49F64] hover:bg-[#b8934f] text-white"
+                    >
+                      {createUserMutation.isPending ? "Добавление..." : "Добавить"}
+                    </Button>
+                    <Button
+                      onClick={() => setShowAddUserForm(false)}
+                      variant="outline"
+                      className="border-[#E8E8E8]"
+                    >
+                      Отмена
+                    </Button>
+                  </div>
+                </Card>
+              )}
+
+              {/* Search */}
+              <div className="mb-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 w-5 h-5 text-[#6E7A85]" />
+                  <Input
+                    type="text"
+                    placeholder="Поиск по имени или email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              {/* Users Table */}
+              {usersLoading ? (
+                <Card className="p-8 text-center">
+                  <p className="text-[#6E7A85]">Загрузка...</p>
+                </Card>
+              ) : filteredUsers.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <p className="text-[#6E7A85]">Пользователей не найдено</p>
+                </Card>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-[#E8E8E8]">
+                        <th className="text-left py-4 px-4 font-semibold text-[#2C353D]">Имя</th>
+                        <th className="text-left py-4 px-4 font-semibold text-[#2C353D]">Email</th>
+                        <th className="text-left py-4 px-4 font-semibold text-[#2C353D]">Роль</th>
+                        <th className="text-left py-4 px-4 font-semibold text-[#2C353D]">Действия</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredUsers.map((u) => (
+                        <tr key={u.id} className="border-b border-[#E8E8E8] hover:bg-[#F0F4F8]">
+                          <td className="py-4 px-4 text-[#2C353D]">
+                            {u.firstName} {u.lastName}
+                          </td>
+                          <td className="py-4 px-4 text-[#6E7A85]">{u.email}</td>
+                          <td className="py-4 px-4">
+                            <span
+                              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                u.role === "admin"
+                                  ? "bg-[#C49F64]/20 text-[#C49F64]"
+                                  : "bg-[#F0F4F8] text-[#6E7A85]"
+                              }`}
+                            >
+                              {u.role === "admin" ? "Администратор" : "Пользователь"}
+                            </span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64]/10"
+                                onClick={() => {
+                                  const newRole = u.role === "admin" ? "user" : "admin";
+                                  handleUpdateUser(u.id, { role: newRole });
+                                }}
+                                disabled={updateUserMutation.isPending}
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-red-300 text-red-600 hover:bg-red-50"
+                                onClick={() => handleDeleteUser(u.id)}
+                                disabled={deleteUserMutation.isPending}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </TabsContent>
+          )}
         </Tabs>
       </main>
 
