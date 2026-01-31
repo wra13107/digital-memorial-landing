@@ -267,6 +267,7 @@ export async function createLocalUser(data: {
   passwordHash: string;
   phone: string;
   countryCode: string;
+  role?: "admin" | "user" | "customer";
 }) {
   const db = await getDb();
   if (!db) {
@@ -283,7 +284,7 @@ export async function createLocalUser(data: {
     phone: data.phone,
     countryCode: data.countryCode,
     loginMethod: "local",
-    role: "user",
+    role: data.role || "customer",
   });
 
   // Fetch and return the created user

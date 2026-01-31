@@ -36,7 +36,7 @@ function DashboardContent() {
     password: "",
     phone: "",
     countryCode: "US",
-    role: "user" as "user" | "admin",
+    role: "customer" as "admin" | "user" | "customer",
   });
 
   // Fetch gallery items - requires memorialId, so we'll skip for now
@@ -61,7 +61,7 @@ function DashboardContent() {
         password: "",
         phone: "",
         countryCode: "US",
-        role: "user",
+        role: "customer",
       });
     },
     onError: (error) => {
@@ -376,8 +376,9 @@ function DashboardContent() {
                         <SelectValue placeholder="Выберите роль" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="user">Пользователь</SelectItem>
                         <SelectItem value="admin">Администратор</SelectItem>
+                        <SelectItem value="user">Пользователь</SelectItem>
+                        <SelectItem value="customer">Клиент</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -442,15 +443,17 @@ function DashboardContent() {
                           </td>
                           <td className="py-4 px-4 text-[#6E7A85]">{u.email}</td>
                           <td className="py-4 px-4">
-                            <span
-                              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                u.role === "admin"
-                                  ? "bg-[#C49F64]/20 text-[#C49F64]"
-                                  : "bg-[#F0F4F8] text-[#6E7A85]"
-                              }`}
-                            >
-                              {u.role === "admin" ? "Администратор" : "Пользователь"}
-                            </span>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            u.role === "admin"
+                              ? "bg-[#C49F64]/20 text-[#C49F64]"
+                              : u.role === "user"
+                              ? "bg-blue-50 text-blue-600"
+                              : "bg-[#F0F4F8] text-[#6E7A85]"
+                          }`}
+                        >
+                          {u.role === "admin" ? "Администратор" : u.role === "user" ? "Пользователь" : "Клиент"}
+                        </span>
                           </td>
                           <td className="py-4 px-4">
                             <div className="flex gap-2">
@@ -458,10 +461,11 @@ function DashboardContent() {
                                 size="sm"
                                 variant="outline"
                                 className="border-[#C49F64] text-[#C49F64] hover:bg-[#C49F64]/10"
-                                onClick={() => {
-                                  const newRole = u.role === "admin" ? "user" : "admin";
-                                  handleUpdateUser(u.id, { role: newRole });
-                                }}
+                              onClick={() => {
+                                const roleOrder = { admin: "user", user: "customer", customer: "admin" };
+                                const newRole = roleOrder[u.role as keyof typeof roleOrder] || "customer";
+                                handleUpdateUser(u.id, { role: newRole });
+                              }}
                                 disabled={updateUserMutation.isPending}
                               >
                                 <Edit2 className="w-4 h-4" />

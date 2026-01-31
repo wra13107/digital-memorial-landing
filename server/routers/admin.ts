@@ -28,7 +28,7 @@ export const adminRouter = router({
         id: z.number(),
         name: z.string().optional(),
         email: z.string().email().optional(),
-        role: z.enum(["user", "admin"]).optional(),
+        role: z.enum(["admin", "user", "customer"]).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -53,7 +53,7 @@ export const adminRouter = router({
         password: z.string().min(8, "Password must be at least 8 characters"),
         phone: z.string().optional(),
         countryCode: z.string().optional(),
-        role: z.enum(["user", "admin"]).optional().default("user"),
+        role: z.enum(["admin", "user", "customer"]).optional().default("customer"),
       })
     )
     .mutation(async ({ input }) => {

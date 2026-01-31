@@ -64,6 +64,13 @@
       "when": 1769858369049,
       "tag": "0008_flippant_white_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1769860465442,
+      "tag": "0009_rich_magik",
+      "breakpoints": true
     }
   ]
 }
