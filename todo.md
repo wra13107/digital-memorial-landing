@@ -238,3 +238,12 @@
 - [x] Fix "Create Memorial" button route from /create-memorial to /memorial-editor
 - [x] Fix "Edit Memorial" button route from /edit-memorial/:id to /memorial-editor/:id
 - [x] Test navigation to memorial editor page
+
+
+## Phase 28: Move Media Functionality to MemorialEditor
+- [x] Review Dashboard Media section structure and components
+- [x] Integrate MediaUpload component into MemorialEditor
+- [x] Integrate MediaGallery component into MemorialEditor
+- [x] Add media upload tabs (Photo, Video, Audio) to MemorialEditor
+- [x] Remove Media tab from Dashboard
+- [x] Test media upload and gallery on MemorialEditor page

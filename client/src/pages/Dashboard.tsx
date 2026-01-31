@@ -90,10 +90,9 @@ function DashboardContent() {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="profile">Профиль</TabsTrigger>
             <TabsTrigger value="memorials">Мемориалы</TabsTrigger>
-            <TabsTrigger value="media">Медиа</TabsTrigger>
           </TabsList>
 
           {/* Profile Tab */}
@@ -224,102 +223,6 @@ function DashboardContent() {
                 ))}
               </div>
             )}
-          </TabsContent>
-
-          {/* Media Tab */}
-          <TabsContent value="media" className="space-y-6">
-            {/* Upload Section */}
-            <Card className="p-8">
-              <h2 className="text-2xl font-bold text-[#2C353D] mb-6">Загрузить медиа</h2>
-              <MediaUpload memorialId={0} mediaType="photo" onUploadComplete={() => handleMediaUploadSuccess()} />
-            </Card>
-
-            {/* Media Galleries */}
-            <div className="space-y-8">
-              {/* Photos */}
-              <Card className="p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <Image className="w-6 h-6 text-[#C49F64]" />
-                  <h3 className="text-xl font-bold text-[#2C353D]">
-                    Фотографии ({photos.length})
-                  </h3>
-                </div>
-                {photos.length > 0 ? (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {photos.map((photo: any) => (
-                      <Card key={photo.id} className="overflow-hidden">
-                        <img src={photo.url} alt={photo.title} className="w-full h-48 object-cover" />
-                        <div className="p-4">
-                          <p className="font-semibold text-sm text-[#2C353D]">{photo.title}</p>
-                          <p className="text-xs text-[#6E7A85]">{photo.description}</p>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[#6E7A85] text-center py-8">
-                    Нет загруженных фотографий
-                  </p>
-                )}
-              </Card>
-
-              {/* Videos */}
-              <Card className="p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <Video className="w-6 h-6 text-[#C49F64]" />
-                  <h3 className="text-xl font-bold text-[#2C353D]">
-                    Видео ({videos.length})
-                  </h3>
-                </div>
-                {videos.length > 0 ? (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {videos.map((video: any) => (
-                      <Card key={video.id} className="overflow-hidden">
-                        <video src={video.url} className="w-full h-48 object-cover" controls />
-                        <div className="p-4">
-                          <p className="font-semibold text-sm text-[#2C353D]">{video.title}</p>
-                          <p className="text-xs text-[#6E7A85]">{video.description}</p>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[#6E7A85] text-center py-8">
-                    Нет загруженных видео
-                  </p>
-                )}
-              </Card>
-
-              {/* Audio */}
-              <Card className="p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <Music className="w-6 h-6 text-[#C49F64]" />
-                  <h3 className="text-xl font-bold text-[#2C353D]">
-                    Аудиофайлы ({audios.length})
-                  </h3>
-                </div>
-                {audios.length > 0 ? (
-                  <div className="space-y-3">
-                    {audios.map((audio: any) => (
-                      <Card key={audio.id} className="p-4">
-                        <div className="flex items-center gap-4">
-                          <Music className="w-8 h-8 text-[#C49F64]" />
-                          <div className="flex-1">
-                            <p className="font-semibold text-sm text-[#2C353D]">{audio.title}</p>
-                            <p className="text-xs text-[#6E7A85]">{audio.description}</p>
-                          </div>
-                          <audio src={audio.url} controls className="w-32" />
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[#6E7A85] text-center py-8">
-                    Нет загруженных аудиофайлов
-                  </p>
-                )}
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
       </main>

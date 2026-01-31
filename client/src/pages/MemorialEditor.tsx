@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, MapPin, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, MapPin, Loader2, Image, Video, Music } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MapView } from "@/components/Map";
+import { MediaUpload } from "@/components/MediaUpload";
 
 interface MemorialFormData {
   lastName: string;
@@ -405,6 +407,30 @@ export default function MemorialEditor() {
               </p>
             </div>
           </Card>
+
+          {/* Media Section */}
+          {memorialId && (
+            <Card className="p-8">
+              <h2 className="text-2xl font-bold text-[#2C353D] mb-6">Медиа материалы</h2>
+              <Tabs defaultValue="photo" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 mb-6">
+                  <TabsTrigger value="photo">Фото</TabsTrigger>
+                  <TabsTrigger value="video">Видео</TabsTrigger>
+                  <TabsTrigger value="audio">Аудио</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="photo" className="space-y-4">
+                  <MediaUpload memorialId={memorialId} mediaType="photo" onUploadComplete={() => {}} />
+                </TabsContent>
+                <TabsContent value="video" className="space-y-4">
+                  <MediaUpload memorialId={memorialId} mediaType="video" onUploadComplete={() => {}} />
+                </TabsContent>
+                <TabsContent value="audio" className="space-y-4">
+                  <MediaUpload memorialId={memorialId} mediaType="audio" onUploadComplete={() => {}} />
+                </TabsContent>
+              </Tabs>
+            </Card>
+          )}
 
           {/* Error Message */}
           {errors.submit && (
