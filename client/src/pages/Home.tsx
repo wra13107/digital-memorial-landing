@@ -539,27 +539,26 @@ export default function Home() {
               </div>
 
               <h3 className="text-2xl font-bold text-[#2C353D] mb-4 mt-4">Наследие</h3>
-              <p className="text-[#6E7A85] mb-6">Вечное хранение памяти</p>
+              <p className="text-[#6E7A85] mb-6">Для всей семьи</p>
               
               <div className="mb-6">
                 <p className="text-3xl font-bold text-[#2C353D] mb-2">
-                  4,999 ₽<span className="text-lg text-[#6E7A85]"> один раз</span>
+                  2,999 ₽<span className="text-lg text-[#6E7A85]">/год</span>
                 </p>
-                <p className="text-sm text-[#6E7A85]">Дешевле, чем венок из живых цветов</p>
               </div>
 
               <ul className="space-y-3 mb-8">
                 <li className="flex gap-2 text-[#2C353D] font-semibold">
                   <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
-                  Вечное хранение
+                  до 10 мемориалов
                 </li>
                 <li className="flex gap-2 text-[#2C353D] font-semibold">
                   <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
-                  Табличка с доставкой
+                  до 500 фото, 50 видео
                 </li>
                 <li className="flex gap-2 text-[#2C353D] font-semibold">
                   <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
-                  Премиум-дизайн страницы
+                  Дизайн страницы на выбор
                 </li>
                 <li className="flex gap-2 text-[#2C353D] font-semibold">
                   <CheckCircle2 className="w-5 h-5 text-[#C49F64] flex-shrink-0" />
@@ -568,7 +567,7 @@ export default function Home() {
               </ul>
 
               <Button className="w-full bg-[#C49F64] hover:bg-[#b8934f] text-white font-semibold">
-                Оформить Вечный тариф
+                Выбрать
               </Button>
             </div>
           </div>
