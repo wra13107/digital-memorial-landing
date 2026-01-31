@@ -139,13 +139,16 @@ export default function MemorialEditor() {
     try {
       if (memorialId) {
         // Update existing memorial
+        const birthDate = formData.birthDate ? new Date(formData.birthDate) : undefined;
+        const deathDate = formData.deathDate ? new Date(formData.deathDate) : undefined;
+        
         await updateMutation.mutateAsync({
           id: memorialId,
           lastName: formData.lastName,
           firstName: formData.firstName,
           patronymic: formData.patronymic || undefined,
-          birthDate: formData.birthDate ? new Date(formData.birthDate) : undefined,
-          deathDate: formData.deathDate ? new Date(formData.deathDate) : undefined,
+          birthDate,
+          deathDate,
           burialPlace: formData.burialPlace || undefined,
           latitude: formData.latitude || undefined,
           longitude: formData.longitude || undefined,
@@ -155,12 +158,16 @@ export default function MemorialEditor() {
         navigate("/dashboard");
       } else {
         // Create new memorial
+        // Convert date strings to Date objects for proper serialization
+        const birthDate = formData.birthDate ? new Date(formData.birthDate) : undefined;
+        const deathDate = formData.deathDate ? new Date(formData.deathDate) : undefined;
+        
         const result = await createMutation.mutateAsync({
           lastName: formData.lastName,
           firstName: formData.firstName,
           patronymic: formData.patronymic || undefined,
-          birthDate: formData.birthDate ? new Date(formData.birthDate) : undefined,
-          deathDate: formData.deathDate ? new Date(formData.deathDate) : undefined,
+          birthDate,
+          deathDate,
           burialPlace: formData.burialPlace || undefined,
           latitude: formData.latitude || undefined,
           longitude: formData.longitude || undefined,

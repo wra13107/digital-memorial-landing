@@ -109,8 +109,25 @@ export async function createMemorial(memorial: InsertMemorial) {
     throw new Error("Database not available");
   }
 
-  const result = await db.insert(memorials).values(memorial);
-  return result;
+  // Ensure dates are valid Date objects
+  // SuperJSON serializes Date as ISO strings, we need to convert them back
+  const normalizedMemorial = {
+    ...memorial,
+    birthDate: memorial.birthDate ? 
+      (memorial.birthDate instanceof Date ? memorial.birthDate : new Date(memorial.birthDate)) 
+      : undefined,
+    deathDate: memorial.deathDate ? 
+      (memorial.deathDate instanceof Date ? memorial.deathDate : new Date(memorial.deathDate)) 
+      : undefined,
+  };
+
+  try {
+    const result = await db.insert(memorials).values(normalizedMemorial);
+    return result;
+  } catch (error: any) {
+    console.error('Database insert error:', error);
+    throw error;
+  }
 }
 
 export async function getMemorialsByUserId(userId: number) {
@@ -130,15 +147,25 @@ export async function getMemorialById(id: number) {
 
   const result = await db.select().from(memorials).where(eq(memorials.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
-}
-
-export async function updateMemorial(id: number, data: Partial<InsertMemorial>) {
+}export async function updateMemorial(id: number, updates: Partial<InsertMemorial>) {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  return await db.update(memorials).set(data).where(eq(memorials.id, id));
+  // Ensure dates are properly formatted for MySQL timestamp fields
+  const normalizedUpdates = {
+    ...updates,
+    ...(updates.birthDate && {
+      birthDate: updates.birthDate instanceof Date ? updates.birthDate : new Date(updates.birthDate)
+    }),
+    ...(updates.deathDate && {
+      deathDate: updates.deathDate instanceof Date ? updates.deathDate : new Date(updates.deathDate)
+    }),
+  };
+
+  const result = await db.update(memorials).set(normalizedUpdates).where(eq(memorials.id, id));
+  return result;
 }
 
 export async function addGalleryItem(item: InsertGalleryItem) {
