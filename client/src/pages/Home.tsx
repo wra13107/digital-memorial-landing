@@ -166,8 +166,8 @@ export default function Home() {
               <BeforeAfterComparison
                 beforeImage="/images/before-after-memorial-after.jpg"
                 afterImage="/images/before-after-memorial-before.jpg"
-                beforeLabel="Цифровой мемориал"
-                afterLabel="Традиционный памятник"
+                beforeLabel="Традиционный памятник"
+                afterLabel="Цифровой мемориал"
               />
             </div>
 
