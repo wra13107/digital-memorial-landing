@@ -247,3 +247,12 @@
 - [x] Add media upload tabs (Photo, Video, Audio) to MemorialEditor
 - [x] Remove Media tab from Dashboard
 - [x] Test media upload and gallery on MemorialEditor page
+
+
+## Phase 30: Add Photo/Video Upload on Memorial Creation
+- [ ] Create temporary media storage for new memorials before saving
+- [ ] Add photo upload section to MemorialEditor
+- [ ] Add video upload section to MemorialEditor
+- [ ] Implement media preview gallery on creation page
+- [ ] Save uploaded media when memorial is created
+- [ ] Test photo and video upload on memorial creation
