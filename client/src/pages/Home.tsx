@@ -164,10 +164,10 @@ export default function Home() {
           <div className="space-y-8" data-aos="fade-up" data-aos-duration="800">
             <div className="max-w-4xl mx-auto">
               <BeforeAfterComparison
-                beforeImage="/images/before-after-memorial-before.jpg"
-                afterImage="/images/before-after-memorial-after.jpg"
-                beforeLabel="Традиционный памятник"
-                afterLabel="Цифровой мемориал"
+                beforeImage="/images/before-after-memorial-after.jpg"
+                afterImage="/images/before-after-memorial-before.jpg"
+                beforeLabel="Цифровой мемориал"
+                afterLabel="Традиционный памятник"
               />
             </div>
 
