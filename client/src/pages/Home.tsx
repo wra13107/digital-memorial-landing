@@ -165,7 +165,7 @@ export default function Home() {
             <div className="max-w-4xl mx-auto">
               <BeforeAfterComparison
                 beforeImage="/images/before-after-memorial-before.jpg"
-                afterImage="/images/before-after-memorial.jpg"
+                afterImage="/images/before-after-memorial-after.jpg"
                 beforeLabel="Традиционный памятник"
                 afterLabel="Цифровой мемориал"
               />
