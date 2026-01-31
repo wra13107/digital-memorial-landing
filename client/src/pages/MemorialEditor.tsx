@@ -168,14 +168,7 @@ export default function MemorialEditor() {
           epitaph: formData.epitaph || undefined,
         });
         if (result && typeof result === 'object' && 'id' in result) {
-          const newMemorialId = (result as any).id;
-          setMemorialId(newMemorialId);
-          setTimeout(() => {
-            const mediaSection = document.getElementById('media-section');
-            if (mediaSection) {
-              mediaSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }, 100);
+          navigate(`/memorial/${(result as any).id}`);
         } else {
           navigate("/dashboard");
         }
@@ -417,7 +410,7 @@ export default function MemorialEditor() {
 
           {/* Media Section */}
           {memorialId && (
-            <Card className="p-8" id="media-section">
+            <Card className="p-8">
               <h2 className="text-2xl font-bold text-[#2C353D] mb-6">Медиа материалы</h2>
               <Tabs defaultValue="photo" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-6">
