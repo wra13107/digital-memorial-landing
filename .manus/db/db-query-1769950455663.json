@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, userId, lastName, firstName, patronymic, burialPlace, description, createdAt FROM memorials ORDER BY createdAt DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT id, userId, lastName, firstName, patronymic, burialPlace, description, createdAt FROM memorials ORDER BY createdAt DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "90002",
+      "userId": "342",
+      "lastName": "Сергеев",
+      "firstName": "Сергей",
+      "patronymic": "Сергеевич",
+      "burialPlace": "привет",
+      "description": "шщзгшщзгшщзгшщзгшщзгз",
+      "createdAt": "2026-02-01 12:51:44"
+    },
+    {
+      "id": "90001",
+      "userId": "1",
+      "lastName": "Сергеев",
+      "firstName": "Сергей",
+      "patronymic": "Сергеевич",
+      "burialPlace": "москва",
+      "description": "прорпоропро мпрпролол",
+      "createdAt": "2026-02-01 12:50:17"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\tlastName\tfirstName\tpatronymic\tburialPlace\tdescription\tcreatedAt\n90002\t342\tСергеев\tСергей\tСергеевич\tпривет\tшщзгшщзгшщзгшщзгшщзгз\t2026-02-01 12:51:44\n90001\t1\tСергеев\tСергей\tСергеевич\tмосква\tпрорпоропро мпрпролол\t2026-02-01 12:50:17\n",
+  "stderr": "",
+  "execution_time_ms": 76
+}

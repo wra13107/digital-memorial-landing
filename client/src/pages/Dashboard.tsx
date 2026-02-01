@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,6 +44,21 @@ function DashboardContent() {
     { memorialId: 0 },
     { enabled: false }
   );
+
+  // Fetch memorials for current user
+  const { data: userMemorials = [], refetch: refetchMemorials } = trpc.memorials.getByUser.useQuery(
+    undefined,
+    { enabled: !!user }
+  );
+
+  // Update memorials state when data is fetched
+  useEffect(() => {
+    if (userMemorials && userMemorials.length > 0) {
+      setMemorials(userMemorials);
+    } else {
+      setMemorials([]);
+    }
+  }, [userMemorials]);
 
   // Fetch users list (for admins only)
   const { data: users = [], isLoading: usersLoading, refetch: refetchUsers } = trpc.admin.listUsers.useQuery(
@@ -289,9 +304,16 @@ function DashboardContent() {
                       <h3 className="text-xl font-bold text-[#2C353D] mb-2">
                         {memorial.firstName} {memorial.lastName}
                       </h3>
-                      <p className="text-[#6E7A85] text-sm mb-4">
-                        {memorial.birthDate} - {memorial.deathDate}
-                      </p>
+                      {memorial.burialPlace && (
+                        <p className="text-[#6E7A85] text-sm mb-4">
+                          📍 {memorial.burialPlace}
+                        </p>
+                      )}
+                      {memorial.description && (
+                        <p className="text-[#6E7A85] text-sm mb-4 line-clamp-2">
+                          {memorial.description}
+                        </p>
+                      )}
 
                       {/* Actions */}
                       <div className="flex gap-2">
