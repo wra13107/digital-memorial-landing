@@ -24,11 +24,14 @@ interface MemorialFormData {
 
 export default function MemorialEditor() {
   const { user } = useAuth();
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
 
+  // Extract memorial ID from URL (e.g., /memorial-editor/123)
+  const urlMemorialId = location.includes('/memorial-editor/') 
+    ? parseInt(location.split('/memorial-editor/')[1], 10)
+    : null;
 
-
-  const [memorialId, setMemorialId] = useState<number | null>(null);
+  const [memorialId, setMemorialId] = useState<number | null>(urlMemorialId);
   const [isLoading, setIsLoading] = useState(false);
   const [mapCenter, setMapCenter] = useState({ lat: 55.7558, lng: 37.6173 }); // Moscow default
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
