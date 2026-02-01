@@ -20,6 +20,7 @@ interface MemorialFormData {
   longitude: string;
   description: string;
   epitaph: string;
+  mainPhotoUrl?: string;
 }
 
 export default function MemorialEditor() {
@@ -45,6 +46,7 @@ export default function MemorialEditor() {
     longitude: "",
     description: "",
     epitaph: "",
+    mainPhotoUrl: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,6 +69,7 @@ export default function MemorialEditor() {
         longitude: memorial.longitude?.toString() || "",
         description: memorial.description || "",
         epitaph: memorial.epitaph || "",
+        mainPhotoUrl: memorial.mainPhotoUrl || "",
       });
 
       if (memorial.latitude && memorial.longitude) {
@@ -143,6 +146,7 @@ export default function MemorialEditor() {
           longitude: formData.longitude || undefined,
           description: formData.description || undefined,
           epitaph: formData.epitaph || undefined,
+          mainPhotoUrl: formData.mainPhotoUrl || undefined,
         });
         navigate("/dashboard");
       } else {
@@ -156,6 +160,7 @@ export default function MemorialEditor() {
           longitude: formData.longitude || undefined,
           description: formData.description || undefined,
           epitaph: formData.epitaph || undefined,
+          mainPhotoUrl: formData.mainPhotoUrl || undefined,
         });
         if (result && typeof result === 'object' && 'id' in result) {
           const newMemorialId = (result as any).id;
@@ -259,8 +264,42 @@ export default function MemorialEditor() {
                 />
               </div>
             </div>
+          </Card>
 
-
+          {/* Main Photo Section */}
+          <Card className="p-8">
+            <h2 className="text-2xl font-bold text-[#2C353D] mb-6">Основное фото</h2>
+            
+            <div className="space-y-4">
+              {formData.mainPhotoUrl && (
+                <div className="relative w-full h-64 bg-[#F0F4F8] rounded-lg overflow-hidden">
+                  <img
+                    src={formData.mainPhotoUrl}
+                    alt="Main memorial photo"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, mainPhotoUrl: "" }))}
+                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              
+              <div className="border-2 border-dashed border-[#C49F64] rounded-lg p-6 text-center">
+                <Image className="w-12 h-12 text-[#C49F64] mx-auto mb-2" />
+                <p className="text-[#6E7A85] mb-4">Загрузите основное фото мемориала</p>
+                <input
+                  type="url"
+                  placeholder="Или вставьте URL фото"
+                  value={formData.mainPhotoUrl || ""}
+                  onChange={(e) => setFormData(prev => ({ ...prev, mainPhotoUrl: e.target.value }))}
+                  className="w-full px-4 py-2 border border-[#C49F64] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C49F64]"
+                />
+              </div>
+            </div>
           </Card>
 
           {/* Burial Information Section */}

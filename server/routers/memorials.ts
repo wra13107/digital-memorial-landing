@@ -23,6 +23,7 @@ export const memorialsRouter = router({
         longitude: z.string().optional(),
         description: z.string().optional(),
         epitaph: z.string().optional(),
+        mainPhotoUrl: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -36,6 +37,7 @@ export const memorialsRouter = router({
         longitude: input.longitude ? parseFloat(input.longitude).toString() : null,
         description: input.description,
         epitaph: input.epitaph,
+        mainPhotoUrl: input.mainPhotoUrl,
         isPublic: true,
       });
     }),

@@ -289,11 +289,11 @@ function DashboardContent() {
                 {memorials.map((memorial) => (
                   <Card key={memorial.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     {/* Memorial Image */}
-                    {memorial.mainPhoto && (
+                    {memorial.mainPhotoUrl && (
                       <div className="w-full h-48 bg-[#F0F4F8] overflow-hidden">
                         <img
-                          src={memorial.mainPhoto}
-                          alt={memorial.name}
+                          src={memorial.mainPhotoUrl}
+                          alt={`${memorial.firstName} ${memorial.lastName}`}
                           className="w-full h-full object-cover"
                         />
                       </div>
