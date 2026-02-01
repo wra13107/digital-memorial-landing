@@ -235,7 +235,7 @@ export default function Home() {
             <div className="text-center space-y-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
               <div className="mx-auto w-48 h-48 rounded-lg overflow-hidden shadow-md mb-6">
                 <img
-                  src="/images/three-steps-illustration.jpg"
+                  src="/images/three-steps-step3.webp"
                   alt="Step 3: Install"
                   className="w-full h-full object-cover"
                 />
