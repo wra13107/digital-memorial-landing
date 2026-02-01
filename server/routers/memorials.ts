@@ -18,8 +18,6 @@ export const memorialsRouter = router({
         lastName: z.string().min(1),
         firstName: z.string().min(1),
         patronymic: z.string().optional(),
-        birthDate: z.string().optional(), // Accept ISO date string
-        deathDate: z.string().optional(), // Accept ISO date string
         burialPlace: z.string().optional(),
         latitude: z.string().optional(),
         longitude: z.string().optional(),
@@ -33,8 +31,6 @@ export const memorialsRouter = router({
         lastName: input.lastName,
         firstName: input.firstName,
         patronymic: input.patronymic,
-        birthDate: input.birthDate ? input.birthDate : undefined,
-        deathDate: input.deathDate ? input.deathDate : undefined,
         burialPlace: input.burialPlace,
         latitude: input.latitude ? parseFloat(input.latitude).toString() : null,
         longitude: input.longitude ? parseFloat(input.longitude).toString() : null,
@@ -68,8 +64,6 @@ export const memorialsRouter = router({
         lastName: z.string().optional(),
         firstName: z.string().optional(),
         patronymic: z.string().optional(),
-        birthDate: z.string().optional(), // Accept ISO date string
-        deathDate: z.string().optional(), // Accept ISO date string
         mainPhotoUrl: z.string().optional(),
         burialPlace: z.string().optional(),
         latitude: z.string().optional(),
@@ -89,8 +83,6 @@ export const memorialsRouter = router({
       if (input.lastName) updateData.lastName = input.lastName;
       if (input.firstName) updateData.firstName = input.firstName;
       if (input.patronymic !== undefined) updateData.patronymic = input.patronymic;
-      if (input.birthDate) updateData.birthDate = new Date(input.birthDate);
-      if (input.deathDate) updateData.deathDate = new Date(input.deathDate);
       if (input.mainPhotoUrl) updateData.mainPhotoUrl = input.mainPhotoUrl;
       if (input.burialPlace) updateData.burialPlace = input.burialPlace;
       if (input.latitude) updateData.latitude = parseFloat(input.latitude).toString();

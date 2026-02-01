@@ -15,8 +15,6 @@ interface MemorialFormData {
   lastName: string;
   firstName: string;
   patronymic: string;
-  birthDate: string;
-  deathDate: string;
   burialPlace: string;
   latitude: string;
   longitude: string;
@@ -39,8 +37,6 @@ export default function MemorialEditor() {
     lastName: "",
     firstName: "",
     patronymic: "",
-    birthDate: "",
-    deathDate: "",
     burialPlace: "",
     latitude: "",
     longitude: "",
@@ -63,8 +59,6 @@ export default function MemorialEditor() {
         lastName: memorial.lastName || "",
         firstName: memorial.firstName || "",
         patronymic: memorial.patronymic || "",
-        birthDate: memorial.birthDate ? new Date(memorial.birthDate).toISOString().split("T")[0] : "",
-        deathDate: memorial.deathDate ? new Date(memorial.deathDate).toISOString().split("T")[0] : "",
         burialPlace: memorial.burialPlace || "",
         latitude: memorial.latitude?.toString() || "",
         longitude: memorial.longitude?.toString() || "",
@@ -92,12 +86,6 @@ export default function MemorialEditor() {
     }
     if (!formData.firstName.trim()) {
       newErrors.firstName = "Имя обязательно";
-    }
-    if (!formData.birthDate) {
-      newErrors.birthDate = "Дата рождения обязательна";
-    }
-    if (!formData.deathDate) {
-      newErrors.deathDate = "Дата смерти обязательна";
     }
 
     setErrors(newErrors);
@@ -142,17 +130,11 @@ export default function MemorialEditor() {
     try {
       if (memorialId) {
         // Update existing memorial
-        // Send dates as YYYY-MM-DD strings (no time component)
-        const birthDate = formData.birthDate ? formData.birthDate.split('T')[0] : undefined;
-        const deathDate = formData.deathDate ? formData.deathDate.split('T')[0] : undefined;
-        
         await updateMutation.mutateAsync({
           id: memorialId,
           lastName: formData.lastName,
           firstName: formData.firstName,
           patronymic: formData.patronymic || undefined,
-          birthDate,
-          deathDate,
           burialPlace: formData.burialPlace || undefined,
           latitude: formData.latitude || undefined,
           longitude: formData.longitude || undefined,
@@ -162,16 +144,10 @@ export default function MemorialEditor() {
         navigate("/dashboard");
       } else {
         // Create new memorial
-        // Send dates as YYYY-MM-DD strings (no time component)
-        const birthDate = formData.birthDate ? formData.birthDate.split('T')[0] : undefined;
-        const deathDate = formData.deathDate ? formData.deathDate.split('T')[0] : undefined;
-        
         const result = await createMutation.mutateAsync({
           lastName: formData.lastName,
           firstName: formData.firstName,
           patronymic: formData.patronymic || undefined,
-          birthDate,
-          deathDate,
           burialPlace: formData.burialPlace || undefined,
           latitude: formData.latitude || undefined,
           longitude: formData.longitude || undefined,
@@ -281,42 +257,7 @@ export default function MemorialEditor() {
               </div>
             </div>
 
-            {/* Birth and Death Dates */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Birth Date */}
-              <div>
-                <label className="block text-sm font-semibold text-[#2C353D] mb-2">
-                  Дата рождения *
-                </label>
-                <Input
-                  type="date"
-                  name="birthDate"
-                  value={formData.birthDate}
-                  onChange={handleInputChange}
-                  className={errors.birthDate ? "border-red-500" : ""}
-                />
-                {errors.birthDate && (
-                  <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>
-                )}
-              </div>
 
-              {/* Death Date */}
-              <div>
-                <label className="block text-sm font-semibold text-[#2C353D] mb-2">
-                  Дата смерти *
-                </label>
-                <Input
-                  type="date"
-                  name="deathDate"
-                  value={formData.deathDate}
-                  onChange={handleInputChange}
-                  className={errors.deathDate ? "border-red-500" : ""}
-                />
-                {errors.deathDate && (
-                  <p className="text-red-500 text-sm mt-1">{errors.deathDate}</p>
-                )}
-              </div>
-            </div>
           </Card>
 
           {/* Burial Information Section */}
