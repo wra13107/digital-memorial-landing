@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
+import { storagePut } from "../storage";
 import {
   createMemorial,
   getMemorialsByUserId,
@@ -245,5 +246,43 @@ export const memorialsRouter = router({
         });
       }
       return await getGalleryItemsByMemorialId(input.memorialId);
+    }),
+
+  uploadPhoto: protectedProcedure
+    .input(
+      z.object({
+        file: z.array(z.number()),
+        fileName: z.string().min(1),
+        contentType: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+      if (!allowedTypes.includes(input.contentType)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid file type",
+        });
+      }
+
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      if (input.file.length > MAX_FILE_SIZE) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "File size exceeds 10MB limit",
+        });
+      }
+
+      const timestamp = Date.now();
+      const randomSuffix = Math.random().toString(36).substring(7);
+      const s3Key = `memorials/${ctx.user.id}/photos/${timestamp}-${randomSuffix}-${input.fileName}`;
+
+      const fileBuffer = Buffer.from(new Uint8Array(input.file));
+      const result = await storagePut(s3Key, fileBuffer, input.contentType);
+
+      return {
+        url: result.url,
+        key: result.key,
+      };
     }),
 });

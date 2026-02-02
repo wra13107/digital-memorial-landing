@@ -98,6 +98,31 @@ export default function MemorialEditor() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    try {
+      const uploadMutation = trpc.memorials.uploadPhoto.useMutation();
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await uploadMutation.mutateAsync({
+        file: Array.from(new Uint8Array(arrayBuffer)),
+        fileName: file.name,
+        contentType: file.type,
+      });
+      setFormData((prev) => ({
+        ...prev,
+        mainPhotoUrl: result.url,
+      }));
+    } catch (error) {
+      console.error("Photo upload error:", error);
+      alert("Ошибка при загрузке фото");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -288,16 +313,20 @@ export default function MemorialEditor() {
                 </div>
               )}
               
-              <div className="border-2 border-dashed border-[#C49F64] rounded-lg p-6 text-center">
-                <Image className="w-12 h-12 text-[#C49F64] mx-auto mb-2" />
-                <p className="text-[#6E7A85] mb-4">Загрузите основное фото мемориала</p>
+              <div className="border-2 border-dashed border-[#C49F64] rounded-lg p-6 text-center hover:bg-[#C49F64]/5 transition-colors cursor-pointer">
                 <input
-                  type="url"
-                  placeholder="Или вставьте URL фото"
-                  value={formData.mainPhotoUrl || ""}
-                  onChange={(e) => setFormData(prev => ({ ...prev, mainPhotoUrl: e.target.value }))}
-                  className="w-full px-4 py-2 border border-[#C49F64] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C49F64]"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handlePhotoUpload(e)}
+                  className="hidden"
+                  id="photo-upload"
+                  disabled={isLoading}
                 />
+                <label htmlFor="photo-upload" className="cursor-pointer block">
+                  <Image className="w-12 h-12 text-[#C49F64] mx-auto mb-2" />
+                  <p className="text-[#6E7A85] mb-2">Загрузите основное фото мемориала</p>
+                  <p className="text-sm text-[#C49F64] font-semibold">Нажмите для выбора файла</p>
+                </label>
               </div>
             </div>
           </Card>

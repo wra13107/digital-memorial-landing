@@ -14,6 +14,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import AdminPanel from "./pages/AdminPanel";
 import MemorialPage from "./pages/MemorialPage";
+import MemorialPublic from "./pages/MemorialPublic";
 import Profile from "./pages/Profile";
 import MemorialEditor from "./pages/MemorialEditor";
 import { useEffect } from "react";
@@ -47,7 +48,7 @@ function Router() {
           <Profile />
         </ProtectedRoute>
       </Route>
-      <Route path="/memorial/:id" component={MemorialPage} />
+      <Route path="/memorial/:id" component={MemorialPublic} />
       <Route path="/memorial-editor">
         <ProtectedRoute>
           <MemorialEditor />
