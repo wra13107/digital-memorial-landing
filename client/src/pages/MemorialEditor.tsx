@@ -83,6 +83,7 @@ export default function MemorialEditor() {
 
   const createMutation = trpc.memorials.create.useMutation();
   const updateMutation = trpc.memorials.update.useMutation();
+  const uploadPhotoMutation = trpc.memorials.uploadPhoto.useMutation();
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -104,9 +105,8 @@ export default function MemorialEditor() {
 
     setIsLoading(true);
     try {
-      const uploadMutation = trpc.memorials.uploadPhoto.useMutation();
       const arrayBuffer = await file.arrayBuffer();
-      const result = await uploadMutation.mutateAsync({
+      const result = await uploadPhotoMutation.mutateAsync({
         file: Array.from(new Uint8Array(arrayBuffer)),
         fileName: file.name,
         contentType: file.type,
