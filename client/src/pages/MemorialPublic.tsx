@@ -122,6 +122,27 @@ export default function MemorialPublic() {
               </div>
             </Card>
 
+            {/* Map Section */}
+            {memorial.latitude && memorial.longitude && (
+              <Card className="overflow-hidden">
+                <div className="p-8">
+                  <h2 className="text-2xl font-bold text-[#2C353D] mb-6 flex items-center gap-2">
+                    <MapPin className="w-6 h-6 text-[#C49F64]" />
+                    Место захоронения
+                  </h2>
+                </div>
+                <div className="w-full h-96">
+                  <MapView
+                    initialCenter={{
+                      lat: parseFloat(memorial.latitude.toString()),
+                      lng: parseFloat(memorial.longitude.toString()),
+                    }}
+                    initialZoom={15}
+                  />
+                </div>
+              </Card>
+            )}
+
             {/* Media Gallery */}
             {(photos.length > 0 || videos.length > 0 || audios.length > 0) && (
               <Card className="p-8">
