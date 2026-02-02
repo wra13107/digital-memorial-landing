@@ -10,6 +10,7 @@ import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { MapView } from "@/components/Map";
 import { MediaUpload } from "@/components/MediaUpload";
+import { scaleImage } from "@/lib/imageScaling";
 
 interface MemorialFormData {
   lastName: string;
@@ -105,11 +106,13 @@ export default function MemorialEditor() {
 
     setIsLoading(true);
     try {
-      const arrayBuffer = await file.arrayBuffer();
+      // Scale image to 800px max dimension
+      const scaledFile = await scaleImage(file, 800);
+      const arrayBuffer = await scaledFile.arrayBuffer();
       const result = await uploadPhotoMutation.mutateAsync({
         file: Array.from(new Uint8Array(arrayBuffer)),
-        fileName: file.name,
-        contentType: file.type,
+        fileName: scaledFile.name,
+        contentType: scaledFile.type,
       });
       setFormData((prev) => ({
         ...prev,
