@@ -10,6 +10,7 @@ import {
   addGalleryItem,
   getGalleryItemsByMemorialId,
   deleteGalleryItem,
+  deleteMemorial,
 } from "../db";
 
 export const memorialsRouter = router({
@@ -284,5 +285,38 @@ export const memorialsRouter = router({
         url: result.url,
         key: result.key,
       };
+    }),
+
+  // Delete main photo from memorial
+  deletePhoto: protectedProcedure
+    .input(z.object({ memorialId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const memorial = await getMemorialById(input.memorialId);
+      if (!memorial || memorial.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Access denied",
+        });
+      }
+
+      return await updateMemorial(input.memorialId, {
+        mainPhotoUrl: null,
+      });
+    }),
+
+  // Delete entire memorial
+  delete: protectedProcedure
+    .input(z.object({ memorialId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const memorial = await getMemorialById(input.memorialId);
+      if (!memorial || memorial.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Access denied",
+        });
+      }
+
+      // Delete from database
+      return await deleteMemorial(input.memorialId);
     }),
 });

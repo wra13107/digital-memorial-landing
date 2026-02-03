@@ -85,6 +85,7 @@ export default function MemorialEditor() {
   const createMutation = trpc.memorials.create.useMutation();
   const updateMutation = trpc.memorials.update.useMutation();
   const uploadPhotoMutation = trpc.memorials.uploadPhoto.useMutation();
+  const deletePhotoMutation = trpc.memorials.deletePhoto.useMutation();
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -308,10 +309,16 @@ export default function MemorialEditor() {
                   />
                   <button
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, mainPhotoUrl: "" }))}
-                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                    onClick={async () => {
+                      if (memorialId) {
+                        await deletePhotoMutation.mutateAsync({ memorialId });
+                      }
+                      setFormData(prev => ({ ...prev, mainPhotoUrl: "" }));
+                    }}
+                    disabled={deletePhotoMutation.isPending}
+                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white p-2 rounded-full"
                   >
-                    ×
+                    {deletePhotoMutation.isPending ? "..." : "×"}
                   </button>
                 </div>
               )}

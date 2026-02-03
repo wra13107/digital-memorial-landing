@@ -102,6 +102,15 @@ function DashboardContent() {
     },
   });
 
+  const deleteMemorialMutation = trpc.memorials.delete.useMutation({
+    onSuccess: () => {
+      refetchMemorials();
+    },
+    onError: (error) => {
+      alert(`Ошибка при удалении мемориала: ${error.message}`);
+    },
+  });
+
   const handleLogout = async () => {
     await logout();
     navigate("/");
@@ -115,9 +124,10 @@ function DashboardContent() {
     navigate(`/memorial-editor/${id}`);
   };
 
-  const handleDeleteMemorial = (id: string) => {
-    // TODO: Implement delete API call
-    setMemorials(memorials.filter(m => m.id !== id));
+  const handleDeleteMemorial = async (id: number) => {
+    if (confirm("Вы уверены, что хотите удалить этот мемориал? Это действие невозможно отменить.")) {
+      await deleteMemorialMutation.mutateAsync({ memorialId: id });
+    }
   };
 
   const handleMediaUploadSuccess = () => {

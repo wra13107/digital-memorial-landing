@@ -385,3 +385,21 @@ export async function deleteUserAccount(userId: number): Promise<void> {
     throw new Error("Failed to delete user account");
   }
 }
+
+export async function deleteMemorial(memorialId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    // Delete all gallery items for this memorial
+    await db.delete(galleryItems).where(eq(galleryItems.memorialId, memorialId));
+
+    // Delete the memorial
+    await db.delete(memorials).where(eq(memorials.id, memorialId));
+  } catch (error) {
+    console.error("[Database] Error deleting memorial:", error);
+    throw new Error("Failed to delete memorial");
+  }
+}
