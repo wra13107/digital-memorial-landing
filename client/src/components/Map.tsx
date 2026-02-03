@@ -114,6 +114,8 @@ interface MapViewProps {
   initialCenter?: google.maps.LatLngLiteral;
   initialZoom?: number;
   onMapReady?: (map: google.maps.Map) => void;
+  markerTitle?: string;
+  markerPosition?: google.maps.LatLngLiteral;
 }
 
 export function MapView({
@@ -121,6 +123,8 @@ export function MapView({
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,
   onMapReady,
+  markerTitle,
+  markerPosition,
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
@@ -140,6 +144,25 @@ export function MapView({
       streetViewControl: true,
       mapId: "DEMO_MAP_ID",
     });
+
+    // Add marker if position and title are provided
+    if (markerPosition && markerTitle && map.current) {
+      const marker = new window.google.maps.marker.AdvancedMarkerElement({
+        map: map.current,
+        position: markerPosition,
+        title: markerTitle,
+      });
+
+      // Add info window to show title on click
+      const infoWindow = new window.google.maps.InfoWindow({
+        content: `<div style="padding: 8px; font-weight: bold;">${markerTitle}</div>`,
+      });
+
+      marker.addEventListener("click", () => {
+        infoWindow.open(map.current, marker);
+      });
+    }
+
     if (onMapReady) {
       onMapReady(map.current);
     }

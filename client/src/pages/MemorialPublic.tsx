@@ -138,6 +138,11 @@ export default function MemorialPublic() {
                       lng: parseFloat(memorial.longitude.toString()),
                     }}
                     initialZoom={15}
+                    markerPosition={{
+                      lat: parseFloat(memorial.latitude.toString()),
+                      lng: parseFloat(memorial.longitude.toString()),
+                    }}
+                    markerTitle={`${memorial.firstName} ${memorial.lastName}`}
                   />
                 </div>
               </Card>
