@@ -11,10 +11,11 @@ interface MediaUploadProps {
   memorialId: number;
   mediaType: "photo" | "video" | "audio";
   onUploadComplete?: (url: string) => void;
+  allowMultiple?: boolean;
 }
 
-export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUploadProps) {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+export function MediaUpload({ memorialId, mediaType, onUploadComplete, allowMultiple = false }: MediaUploadProps) {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [showRecorder, setShowRecorder] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -54,60 +55,66 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUp
       return;
     }
 
-    setSelectedFile(file);
+    if (allowMultiple) {
+      setSelectedFiles([...selectedFiles, file]);
+    } else {
+      setSelectedFiles([file]);
+    }
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      toast.error("Please select a file");
+    if (selectedFiles.length === 0) {
+      toast.error("Please select at least one file");
       return;
     }
 
     setIsUploading(true);
     try {
-      // Step 1: Get S3 key from backend
-      const uploadResponse = await uploadMediaMutation.mutateAsync({
-        memorialId,
-        fileName: selectedFile.name,
-        fileType: selectedFile.type,
-        fileSize: selectedFile.size,
-        mediaType,
-      });
+      for (const file of selectedFiles) {
+        // Step 1: Get S3 key from backend
+        const uploadResponse = await uploadMediaMutation.mutateAsync({
+          memorialId,
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          mediaType,
+        });
 
-      // Step 2: Upload to S3 (simulated - in real app, use presigned URL)
-      // For now, we'll use the storagePut helper from the backend
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("s3Key", uploadResponse.s3Key);
+        // Step 2: Upload to S3
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("s3Key", uploadResponse.s3Key);
 
-      const uploadUrl = `/api/upload`;
-      const uploadResult = await fetch(uploadUrl, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+        const uploadUrl = `/api/upload`;
+        const uploadResult = await fetch(uploadUrl, {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
 
-      if (!uploadResult.ok) {
-        throw new Error("Upload failed");
+        if (!uploadResult.ok) {
+          throw new Error(`Upload failed for ${file.name}`);
+        }
+
+        // Step 3: Confirm upload and add to gallery
+        await confirmUploadMutation.mutateAsync({
+          memorialId,
+          s3Key: uploadResponse.s3Key,
+          mediaType,
+          title: title || undefined,
+          description: description || undefined,
+        });
+
+        onUploadComplete?.(uploadResponse.s3Key);
       }
 
-      // Step 3: Confirm upload and add to gallery
-      await confirmUploadMutation.mutateAsync({
-        memorialId,
-        s3Key: uploadResponse.s3Key,
-        mediaType,
-        title: title || undefined,
-        description: description || undefined,
-      });
-
-      toast.success(`${mediaType} uploaded successfully`);
-      setSelectedFile(null);
+      toast.success(`${selectedFiles.length} ${mediaType}(s) uploaded successfully`);
+      setSelectedFiles([]);
       setTitle("");
       setDescription("");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-      onUploadComplete?.(uploadResponse.s3Key);
     } catch (error) {
       console.error("Upload error:", error);
       toast.error(error instanceof Error ? error.message : "Upload failed");
@@ -141,7 +148,7 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUp
 
   const handleRecordingComplete = (blob: Blob) => {
     const file = new File([blob], `recording-${Date.now()}.webm`, { type: "audio/webm" });
-    setSelectedFile(file);
+    setSelectedFiles([file]);
     setTitle("Audio recording");
     setShowRecorder(false);
     toast.success("Recording ready for upload");
@@ -190,34 +197,37 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUp
             accept={fileTypeMap[mediaType].join(",")}
             onChange={handleFileSelect}
             className="hidden"
+            multiple={allowMultiple}
           />
         </div>
 
-        {/* Selected file info */}
-        {selectedFile && (
-          <div className="bg-accent/50 p-4 rounded-lg flex items-center justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-medium truncate">{selectedFile.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setSelectedFile(null);
-                if (fileInputRef.current) {
-                  fileInputRef.current.value = "";
-                }
-              }}
-              className="p-1 hover:bg-background rounded"
-            >
-              <X className="w-4 h-4" />
-            </button>
+        {/* Selected files info */}
+        {selectedFiles.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">{selectedFiles.length} file(s) selected</p>
+            {selectedFiles.map((file, idx) => (
+              <div key={idx} className="bg-accent/50 p-4 rounded-lg flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm font-medium truncate">{file.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedFiles(selectedFiles.filter((_, i) => i !== idx));
+                  }}
+                  className="p-1 hover:bg-background rounded"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
           </div>
         )}
 
         {/* Title and description */}
-        {selectedFile && (
+        {selectedFiles.length > 0 && (
           <>
             <div>
               <label className="text-sm font-medium">Title (optional)</label>
@@ -245,7 +255,7 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete }: MediaUp
         {/* Upload button */}
         <Button
           onClick={handleUpload}
-          disabled={!selectedFile || isUploading}
+          disabled={selectedFiles.length === 0 || isUploading}
           className="w-full"
         >
           {isUploading ? (

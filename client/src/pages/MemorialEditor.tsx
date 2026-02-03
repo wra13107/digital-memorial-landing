@@ -466,13 +466,13 @@ export default function MemorialEditor() {
                 </TabsList>
 
                 <TabsContent value="photo" className="space-y-4">
-                  <MediaUpload memorialId={memorialId} mediaType="photo" onUploadComplete={() => {}} />
+                  <MediaUpload memorialId={memorialId} mediaType="photo" onUploadComplete={() => {}} allowMultiple={true} />
                 </TabsContent>
                 <TabsContent value="video" className="space-y-4">
-                  <MediaUpload memorialId={memorialId} mediaType="video" onUploadComplete={() => {}} />
+                  <MediaUpload memorialId={memorialId} mediaType="video" onUploadComplete={() => {}} allowMultiple={true} />
                 </TabsContent>
                 <TabsContent value="audio" className="space-y-4">
-                  <MediaUpload memorialId={memorialId} mediaType="audio" onUploadComplete={() => {}} />
+                  <MediaUpload memorialId={memorialId} mediaType="audio" onUploadComplete={() => {}} allowMultiple={true} />
                 </TabsContent>
               </Tabs>
             </Card>
