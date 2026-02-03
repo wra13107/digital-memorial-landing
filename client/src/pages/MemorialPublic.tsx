@@ -2,9 +2,11 @@ import { useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Heart, Music, Play, X } from "lucide-react";
+import { MapPin, Heart, Music, Play, X, Download } from "lucide-react";
 import { useState } from "react";
 import { MapView } from "@/components/Map";
+import { downloadQRCode } from "@/lib/qrCodeDownload";
+import { toast } from "sonner";
 
 export default function MemorialPublic() {
   const [route, params] = useRoute("/memorial/:id");
@@ -248,16 +250,33 @@ export default function MemorialPublic() {
             {/* Share Button */}
             <Card className="p-6">
               <h3 className="font-semibold text-[#2C353D] mb-4">Поделиться</h3>
-              <Button
-                onClick={() => {
-                  const url = window.location.href;
-                  navigator.clipboard.writeText(url);
-                  alert("Ссылка скопирована в буфер обмена");
-                }}
-                className="w-full bg-[#C49F64] hover:bg-[#b8934f] text-white"
-              >
-                Копировать ссылку
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={() => {
+                    const url = window.location.href;
+                    navigator.clipboard.writeText(url);
+                    toast.success("Ссылка скопирована в буфер обмена");
+                  }}
+                  className="w-full bg-[#C49F64] hover:bg-[#b8934f] text-white"
+                >
+                  Копировать ссылку
+                </Button>
+                <Button
+                  onClick={async () => {
+                    try {
+                      const fullName = `${memorial.lastName || ''} ${memorial.firstName || ''}`.trim();
+                      await downloadQRCode(memorialId, fullName || `memorial-${memorialId}`);
+                      toast.success("QR-код скачан успешно");
+                    } catch (error) {
+                      toast.error("Ошибка при скачивании QR-кода");
+                    }
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Скачать QR-код
+                </Button>
+              </div>
             </Card>
 
             {/* Candle */}
