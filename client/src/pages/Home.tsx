@@ -306,8 +306,8 @@ export default function Home() {
               {/* Center - Smartphone Image */}
               <div className="flex justify-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
                 <div className="relative">
-                  <img
-                    src="/images/smartphone-memorial-interface-ru.webp"
+            <img
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663266888267/YCgaPVtYIfEthHjh.jpg"
                     alt="Memorial interface on smartphone"
                     className="w-full max-w-sm shadow-2xl rounded-3xl"
                   />
@@ -366,7 +366,7 @@ export default function Home() {
             {/* Image */}
             <div className="flex justify-center order-2 lg:order-1" data-aos="fade-up" data-aos-duration="800">
               <img
-                src="/images/nameplate-macro.jpg"
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663266888267/mWJoMHiKRIcKpLQK.jpg"
                 alt="Premium nameplate macro photography"
                 className="w-full max-w-md rounded-lg shadow-lg"
               />
