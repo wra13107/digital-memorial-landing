@@ -9,7 +9,9 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
+      console.log('[Database] Connecting to:', process.env.DATABASE_URL?.substring(0, 50) + '...');
       _db = drizzle(process.env.DATABASE_URL);
+      console.log('[Database] Connected successfully');
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -147,8 +149,16 @@ export async function getMemorialById(id: number) {
     return undefined;
   }
 
+  const allMemorials = await db.select().from(memorials);
+  console.log(`[DB] All memorials: ${JSON.stringify(allMemorials.map(m => m.id))}`);
+  
   const result = await db.select().from(memorials).where(eq(memorials.id, id)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
+  if (result.length > 0) {
+    const memorial = result[0];
+    console.log(`[DB] Memorial ${id}: isPublic=${memorial.isPublic}`);
+    return memorial;
+  }
+  return undefined;
 }export async function updateMemorial(id: number, updates: Partial<InsertMemorial>) {
   const db = await getDb();
   if (!db) {

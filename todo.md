@@ -288,3 +288,11 @@
 - [x] Update registration to skip verification
 - [x] Delete VerifyEmail.tsx page
 - [x] Dev server running cleanly without errors
+
+## Phase 34: Production Database Issue (Feb 14, 2026)
+- [ ] Investigate why memorial 150001 created on production is not in database
+- [ ] Check if production uses correct DATABASE_URL environment variable
+- [ ] Verify memorial creation API endpoint is working correctly
+- [ ] Check if there are database connection errors on production
+- [ ] Test memorial creation with new test data
+- [ ] Verify photo upload functionality

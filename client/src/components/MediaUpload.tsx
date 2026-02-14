@@ -96,10 +96,14 @@ export function MediaUpload({ memorialId, mediaType, onUploadComplete, allowMult
           throw new Error(`Upload failed for ${file.name}`);
         }
 
+        const uploadData = await uploadResult.json();
+        const fileUrl = uploadData.url;
+
         // Step 3: Confirm upload and add to gallery
         await confirmUploadMutation.mutateAsync({
           memorialId,
           s3Key: uploadResponse.s3Key,
+          fileUrl,
           mediaType,
           title: title || undefined,
           description: description || undefined,

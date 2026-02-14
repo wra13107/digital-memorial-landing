@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO users (openId, name, email, role) VALUES ('test-user-123', 'Test User', 'test@example.com', 'customer'); INSERT INTO memorials (userId, firstName, lastName, birthDate, deathDate, isPublic, createdAt, updatedAt) VALUES (LAST_INSERT_ID(), 'Иван', 'Петров', '1950-01-15', '2020-12-25', 1, NOW(), NOW()); SELECT LAST_INSERT_ID() as memorialId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute INSERT INTO users (openId, name, email, role) VALUES ('test-user-123', 'Test User', 'test@example.com', 'customer'); INSERT INTO memorials (userId, firstName, lastName, birthDate, deathDate, isPublic, createdAt, updatedAt) VALUES (LAST_INSERT_ID(), 'Иван', 'Петров', '1950-01-15', '2020-12-25', 1, NOW(), NOW()); SELECT LAST_INSERT_ID() as memorialId;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1292 (22007) at line 1: Incorrect timestamp value: '1950-01-15' for column 'birthDate' at row 1"
+  ]
+}

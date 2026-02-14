@@ -1,4 +1,4 @@
-import { useRoute } from "wouter";
+import { useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,12 @@ import { MapView } from "@/components/Map";
 import { downloadQRCode } from "@/lib/qrCodeDownload";
 import { toast } from "sonner";
 
+interface MemorialPublicParams {
+  id: string;
+}
+
 export default function MemorialPublic() {
-  const [route, params] = useRoute("/memorial/:id");
+  const params = useParams<MemorialPublicParams>();
   const memorialId = params?.id ? parseInt(params.id) : null;
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
 

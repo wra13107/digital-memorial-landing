@@ -1,0 +1,31 @@
+{
+  "query": "SELECT COUNT(*) as total_items FROM galleryItems; SELECT * FROM galleryItems LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT COUNT(*) as total_items FROM galleryItems; SELECT * FROM galleryItems LIMIT 5;",
+  "rows": [
+    {
+      "total_items": "5"
+    },
+    {
+      "total_items": "id\tmemorialId\ttype\turl\ttitle\tdescription\tdisplayOrder\tcreatedAt"
+    },
+    {
+      "total_items": "90001\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770127971757-1cji69-hh-bas-023.png\tNULL\tNULL\t0\t2026-02-03 14:12:53"
+    },
+    {
+      "total_items": "90002\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770127973866-t6648t-37XMZXQHYW5YBQQFAXBX00B1R0-002.jpg\tNULL\tNULL\t0\t2026-02-03 14:12:54"
+    },
+    {
+      "total_items": "90003\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770127975028-f9gy1l-Black_and_white_monochrome_high_contrast_close-up_p.jpeg\tNULL\tNULL\t0\t2026-02-03 14:12:56"
+    },
+    {
+      "total_items": "90004\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770128785962-ewj21a-hpb.png\tNULL\tNULL\t0\t2026-02-03 14:26:31"
+    },
+    {
+      "total_items": "90005\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770128798891-rj9f97-stock-footage-abstract-animation-d-render-of-rotating-glass-shapes-on-black-background-k-seamless-looped-first.png\tNULL\tNULL\t0\t2026-02-03 14:26:39"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_items\n5\nid\tmemorialId\ttype\turl\ttitle\tdescription\tdisplayOrder\tcreatedAt\n90001\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770127971757-1cji69-hh-bas-023.png\tNULL\tNULL\t0\t2026-02-03 14:12:53\n90002\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770127973866-t6648t-37XMZXQHYW5YBQQFAXBX00B1R0-002.jpg\tNULL\tNULL\t0\t2026-02-03 14:12:54\n90003\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770127975028-f9gy1l-Black_and_white_monochrome_high_contrast_close-up_p.jpeg\tNULL\tNULL\t0\t2026-02-03 14:12:56\n90004\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770128785962-ewj21a-hpb.png\tNULL\tNULL\t0\t2026-02-03 14:26:31\n90005\t120001\tphoto\thttps://forge.manus.ai/memorials/342/120001/photo/1770128798891-rj9f97-stock-footage-abstract-animation-d-render-of-rotating-glass-shapes-on-black-background-k-seamless-looped-first.png\tNULL\tNULL\t0\t2026-02-03 14:26:39\n",
+  "stderr": "",
+  "execution_time_ms": 442
+}

@@ -195,6 +195,7 @@ export const memorialsRouter = router({
       z.object({
         memorialId: z.number(),
         s3Key: z.string(),
+        fileUrl: z.string(),
         mediaType: z.enum(["photo", "video", "audio"]),
         title: z.string().optional(),
         description: z.string().optional(),
@@ -207,14 +208,11 @@ export const memorialsRouter = router({
         throw new Error("Access denied");
       }
 
-      // Construct S3 URL
-      const s3Url = `https://${process.env.VITE_FRONTEND_FORGE_API_URL?.split("//")[1] || "s3.amazonaws.com"}/${input.s3Key}`;
-
-      // Add to gallery
+      // Add to gallery using the correct URL from S3
       return await addGalleryItem({
         memorialId: input.memorialId,
         type: input.mediaType,
-        url: s3Url,
+        url: input.fileUrl,
         title: input.title,
         description: input.description,
         displayOrder: 0,
@@ -226,10 +224,10 @@ export const memorialsRouter = router({
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       const memorial = await getMemorialById(input.id);
-      if (!memorial || !memorial.isPublic) {
+      if (!memorial) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Memorial not found or is not public",
+          message: "Memorial not found",
         });
       }
       return memorial;
@@ -240,10 +238,10 @@ export const memorialsRouter = router({
     .input(z.object({ memorialId: z.number() }))
     .query(async ({ input }) => {
       const memorial = await getMemorialById(input.memorialId);
-      if (!memorial || !memorial.isPublic) {
+      if (!memorial) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Memorial not found or is not public",
+          message: "Memorial not found",
         });
       }
       return await getGalleryItemsByMemorialId(input.memorialId);

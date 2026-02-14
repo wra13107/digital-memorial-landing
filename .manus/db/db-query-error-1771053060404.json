@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO memorials (firstName, lastName, birthDate, deathDate, location, isPublic, createdAt, updatedAt) VALUES ('Иван', 'Петров', '1950-01-15', '2020-12-25', 'Москва', 1, NOW(), NOW()); SELECT LAST_INSERT_ID() as newId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute INSERT INTO memorials (firstName, lastName, birthDate, deathDate, location, isPublic, createdAt, updatedAt) VALUES ('Иван', 'Петров', '1950-01-15', '2020-12-25', 'Москва', 1, NOW(), NOW()); SELECT LAST_INSERT_ID() as newId;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'location' in 'field list'"
+  ]
+}

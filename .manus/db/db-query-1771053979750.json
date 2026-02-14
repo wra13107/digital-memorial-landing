@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, firstName, lastName, isPublic, createdAt FROM memorials WHERE id = 150001; SELECT id, memorialId, type, url FROM galleryItems WHERE memorialId = 150001;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT id, firstName, lastName, isPublic, createdAt FROM memorials WHERE id = 150001; SELECT id, memorialId, type, url FROM galleryItems WHERE memorialId = 150001;",
+  "rows": [
+    {
+      "id": "150001",
+      "firstName": "Петр",
+      "lastName": "Петров",
+      "isPublic": "1",
+      "createdAt": "2026-02-14 07:23:00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tisPublic\tcreatedAt\n150001\tПетр\tПетров\t1\t2026-02-14 07:23:00\n",
+  "stderr": "",
+  "execution_time_ms": 396
+}

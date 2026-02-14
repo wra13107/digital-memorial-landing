@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, isPublic, CAST(isPublic AS CHAR) as isPublic_str FROM memorials LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT id, isPublic, CAST(isPublic AS CHAR) as isPublic_str FROM memorials LIMIT 5;",
+  "rows": [
+    {
+      "id": "90001",
+      "isPublic": "1",
+      "isPublic_str": "1"
+    },
+    {
+      "id": "120001",
+      "isPublic": "1",
+      "isPublic_str": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tisPublic\tisPublic_str\n90001\t1\t1\n120001\t1\t1\n",
+  "stderr": "",
+  "execution_time_ms": 341
+}

@@ -1,0 +1,22 @@
+{
+  "query": "SELECT DATABASE(); SELECT id, firstName, lastName, isPublic FROM memorials;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT DATABASE(); SELECT id, firstName, lastName, isPublic FROM memorials;",
+  "rows": [
+    {
+      "DATABASE()": "7BQi4QLKtagJxsmsYisuwg"
+    },
+    {
+      "DATABASE()": "id\tfirstName\tlastName\tisPublic"
+    },
+    {
+      "DATABASE()": "90001\tСергей\tСергеев\t1"
+    },
+    {
+      "DATABASE()": "120001\tИван\tСергеев\t1"
+    }
+  ],
+  "messages": [],
+  "stdout": "DATABASE()\n7BQi4QLKtagJxsmsYisuwg\nid\tfirstName\tlastName\tisPublic\n90001\tСергей\tСергеев\t1\n120001\tИван\tСергеев\t1\n",
+  "stderr": "",
+  "execution_time_ms": 385
+}

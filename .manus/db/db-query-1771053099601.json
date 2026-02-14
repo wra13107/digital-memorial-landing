@@ -1,0 +1,22 @@
+{
+  "query": "UPDATE memorials SET isPublic = true; SELECT id, firstName, lastName, isPublic FROM memorials;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute UPDATE memorials SET isPublic = true; SELECT id, firstName, lastName, isPublic FROM memorials;",
+  "rows": [
+    {
+      "id": "90001",
+      "firstName": "Сергей",
+      "lastName": "Сергеев",
+      "isPublic": "1"
+    },
+    {
+      "id": "120001",
+      "firstName": "Иван",
+      "lastName": "Сергеев",
+      "isPublic": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tisPublic\n90001\tСергей\tСергеев\t1\n120001\tИван\tСергеев\t1\n",
+  "stderr": "",
+  "execution_time_ms": 409
+}

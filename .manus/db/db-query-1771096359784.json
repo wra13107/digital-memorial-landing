@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, memorialId, type, url, title FROM galleryItems WHERE memorialId = 150001;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT id, memorialId, type, url, title FROM galleryItems WHERE memorialId = 150001;",
+  "rows": [
+    {
+      "id": "150001",
+      "memorialId": "150001",
+      "type": "photo",
+      "url": "https://forge.manus.ai/memorials/342/150001/photo/1771096251009-qyg3g-det-011.jpg",
+      "title": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tmemorialId\ttype\turl\ttitle\n150001\t150001\tphoto\thttps://forge.manus.ai/memorials/342/150001/photo/1771096251009-qyg3g-det-011.jpg\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 346
+}

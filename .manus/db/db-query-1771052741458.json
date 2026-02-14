@@ -1,0 +1,46 @@
+{
+  "query": "SELECT * FROM memorials;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT * FROM memorials;",
+  "rows": [
+    {
+      "id": "90001",
+      "userId": "1",
+      "lastName": "Сергеев",
+      "firstName": "Сергей",
+      "patronymic": "Сергеевич",
+      "birthDate": "NULL",
+      "deathDate": "NULL",
+      "mainPhotoUrl": "NULL",
+      "burialPlace": "москва",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "description": "прорпоропро мпрпролол",
+      "isPublic": "1",
+      "createdAt": "2026-02-01 12:50:17",
+      "updatedAt": "2026-02-01 12:50:17",
+      "epitaph": "апроапроао"
+    },
+    {
+      "id": "120001",
+      "userId": "342",
+      "lastName": "Сергеев",
+      "firstName": "Иван",
+      "patronymic": "Николаевич",
+      "birthDate": "NULL",
+      "deathDate": "NULL",
+      "mainPhotoUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310519663266888267/7BQi4QLKtagJxsmsYisuwg/memorials/342/photos/1770126973333-6kunls-001.jpg",
+      "burialPlace": "NULL",
+      "latitude": "NULL",
+      "longitude": "NULL",
+      "description": "биография биография биография биография биография биография биография биография биография ",
+      "isPublic": "1",
+      "createdAt": "2026-02-03 13:57:06",
+      "updatedAt": "2026-02-03 13:57:06",
+      "epitaph": "гдг то там когда то гдг то там когда то, гдг то там когда то гдг то там когда то"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\tlastName\tfirstName\tpatronymic\tbirthDate\tdeathDate\tmainPhotoUrl\tburialPlace\tlatitude\tlongitude\tdescription\tisPublic\tcreatedAt\tupdatedAt\tepitaph\n90001\t1\tСергеев\tСергей\tСергеевич\tNULL\tNULL\tNULL\tмосква\tNULL\tNULL\tпрорпоропро мпрпролол\t1\t2026-02-01 12:50:17\t2026-02-01 12:50:17\tапроапроао\n120001\t342\tСергеев\tИван\tНиколаевич\tNULL\tNULL\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663266888267/7BQi4QLKtagJxsmsYisuwg/memorials/342/photos/1770126973333-6kunls-001.jpg\tNULL\tNULL\tNULL\tбиография биография биография биография биография биография биография биография биография \t1\t2026-02-03 13:57:06\t2026-02-03 13:57:06\tгдг то там когда то гдг то там когда то, гдг то там когда то гдг то там когда то\n",
+  "stderr": "",
+  "execution_time_ms": 353
+}

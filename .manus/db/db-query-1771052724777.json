@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, firstName, lastName FROM memorials LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT id, firstName, lastName FROM memorials LIMIT 10;",
+  "rows": [
+    {
+      "id": "90001",
+      "firstName": "Сергей",
+      "lastName": "Сергеев"
+    },
+    {
+      "id": "120001",
+      "firstName": "Иван",
+      "lastName": "Сергеев"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\n90001\tСергей\tСергеев\n120001\tИван\tСергеев\n",
+  "stderr": "",
+  "execution_time_ms": 343
+}

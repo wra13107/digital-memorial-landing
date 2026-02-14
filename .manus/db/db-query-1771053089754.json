@@ -1,0 +1,22 @@
+{
+  "query": "SELECT m.id, m.firstName, m.lastName, COUNT(g.id) as photoCount FROM memorials m LEFT JOIN galleryItems g ON m.id = g.memorialId GROUP BY m.id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3vgeacBXQskVuAu.root --database 7BQi4QLKtagJxsmsYisuwg --execute SELECT m.id, m.firstName, m.lastName, COUNT(g.id) as photoCount FROM memorials m LEFT JOIN galleryItems g ON m.id = g.memorialId GROUP BY m.id;",
+  "rows": [
+    {
+      "id": "120001",
+      "firstName": "Иван",
+      "lastName": "Сергеев",
+      "photoCount": "5"
+    },
+    {
+      "id": "90001",
+      "firstName": "Сергей",
+      "lastName": "Сергеев",
+      "photoCount": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tphotoCount\n120001\tИван\tСергеев\t5\n90001\tСергей\tСергеев\t0\n",
+  "stderr": "",
+  "execution_time_ms": 361
+}
