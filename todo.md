@@ -290,9 +290,13 @@
 - [x] Dev server running cleanly without errors
 
 ## Phase 34: Production Database Issue (Feb 14, 2026)
-- [ ] Investigate why memorial 150001 created on production is not in database
-- [ ] Check if production uses correct DATABASE_URL environment variable
-- [ ] Verify memorial creation API endpoint is working correctly
-- [ ] Check if there are database connection errors on production
-- [ ] Test memorial creation with new test data
-- [ ] Verify photo upload functionality
+- [x] Investigate why memorial 150001 created on production is not in database
+- [x] Check if production uses correct DATABASE_URL environment variable
+- [x] Verify memorial creation API endpoint is working correctly
+- [x] Check if there are database connection errors on production
+- [x] Test memorial creation with new test data
+- [x] Verify photo upload functionality
+- [x] Fixed photo gallery URL issue - confirmMediaUpload now uses correct S3 URLs
+- [x] Redesigned public memorial page with hero section layout
+- [x] Updated gallery grid with varied item sizes (masonry style)
+- [x] Added gold divider between hero and content sections
