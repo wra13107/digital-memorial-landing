@@ -300,3 +300,10 @@
 - [x] Redesigned public memorial page with hero section layout
 - [x] Updated gallery grid with varied item sizes (masonry style)
 - [x] Added gold divider between hero and content sections
+
+
+## Phase 35: Public Page Layout Redesign (Feb 15, 2026)
+- [x] Resize main photo to fit organically in hero section
+- [x] Reposition media player under name in hero section
+- [x] Redesign gallery with split layout (videos left, photos right)
+- [x] Test responsive design on mobile and desktop

@@ -60,15 +60,25 @@ export default function MemorialPublic() {
   const photos = galleryItems?.filter((item) => item.type === "photo") || [];
   const videos = galleryItems?.filter((item) => item.type === "video") || [];
   const audios = galleryItems?.filter((item) => item.type === "audio") || [];
-  const allMedia = [...photos, ...videos];
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       {/* Hero Section */}
       <section className="w-full bg-white">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
-          {/* Left Side - Dark Background with Name and Audio */}
-          <div className="bg-[#1a1a1a] text-white p-8 lg:p-16 flex flex-col justify-center">
+        <div className="max-w-7xl mx-auto">
+          {/* Main Photo - Full Width at Top */}
+          {memorial.mainPhotoUrl && (
+            <div className="w-full h-96 overflow-hidden bg-gray-300">
+              <img
+                src={memorial.mainPhotoUrl}
+                alt={`${memorial.firstName} ${memorial.lastName}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          {/* Name and Audio Player Below Photo */}
+          <div className="bg-[#1a1a1a] text-white p-8 lg:p-16">
             <h1 className="text-5xl lg:text-6xl font-serif font-bold mb-12 leading-tight">
               {memorial.firstName}
               <br />
@@ -77,7 +87,7 @@ export default function MemorialPublic() {
 
             {/* Audio Player */}
             {audios.length > 0 && (
-              <div className="space-y-6">
+              <div className="space-y-6 max-w-2xl">
                 {audios.slice(0, 1).map((audio) => (
                   <div key={audio.id} className="space-y-3">
                     <p className="text-sm font-medium text-gray-300">
@@ -104,17 +114,6 @@ export default function MemorialPublic() {
               </div>
             )}
           </div>
-
-          {/* Right Side - Main Photo */}
-          {memorial.mainPhotoUrl && (
-            <div className="bg-gray-300 overflow-hidden">
-              <img
-                src={memorial.mainPhotoUrl}
-                alt={`${memorial.firstName} ${memorial.lastName}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
         </div>
 
         {/* Gold Divider */}
@@ -214,55 +213,64 @@ export default function MemorialPublic() {
           </div>
         )}
 
-        {/* Media Gallery Section */}
-        {allMedia.length > 0 && (
+        {/* Media Gallery Section - Split Layout */}
+        {(photos.length > 0 || videos.length > 0) && (
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-3xl font-bold text-[#2C353D] mb-12">Галерея</h2>
 
-            {/* Masonry-style Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-max">
-              {allMedia.map((item, index) => {
-                const isVideo = item.type === "video";
-                // Create varied sizes: some items span 2 columns and 2 rows
-                const isLarge = index % 7 === 0 || index % 7 === 3;
-                const colSpan = isLarge ? "col-span-2" : "col-span-1";
-                const rowSpan = isLarge ? "row-span-2" : "row-span-1";
-
-                return (
-                  <div
-                    key={item.id}
-                    className={`group relative overflow-hidden rounded-lg cursor-pointer bg-gray-300 ${colSpan} ${rowSpan} aspect-square`}
-                    onClick={() => setSelectedMedia(item.url)}
-                  >
-                    {isVideo ? (
-                      <video
-                        src={item.url}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                    ) : (
-                      <img
-                        src={item.url}
-                        alt={item.title || "Memorial photo"}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                    )}
-
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                      {isVideo && (
-                        <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 fill-white" />
-                      )}
-                    </div>
-
-                    {/* Video label */}
-                    {isVideo && (
-                      <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                        {item.title || "Видео"}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Videos */}
+              {videos.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold text-[#2C353D] mb-6">Видео</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 auto-rows-max">
+                    {videos.map((video) => (
+                      <div
+                        key={video.id}
+                        className="group relative overflow-hidden rounded-lg cursor-pointer bg-gray-300 aspect-square"
+                        onClick={() => setSelectedMedia(video.url)}
+                      >
+                        <video
+                          src={video.url}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                          <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 fill-white" />
+                        </div>
+                        {/* Video label */}
+                        <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                          {video.title || "Видео"}
+                        </div>
                       </div>
-                    )}
+                    ))}
                   </div>
-                );
-              })}
+                </div>
+              )}
+
+              {/* Right Column - Photos */}
+              {photos.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold text-[#2C353D] mb-6">Фотографии</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 auto-rows-max">
+                    {photos.map((photo) => (
+                      <div
+                        key={photo.id}
+                        className="group relative overflow-hidden rounded-lg cursor-pointer aspect-square bg-gray-300"
+                        onClick={() => setSelectedMedia(photo.url)}
+                      >
+                        <img
+                          src={photo.url}
+                          alt={photo.title || "Memorial photo"}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                          {/* No play icon for photos */}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
