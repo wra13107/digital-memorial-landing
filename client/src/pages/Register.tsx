@@ -91,7 +91,7 @@ export default function Register() {
       
       // Redirect to verify-email page after 2 seconds
       setTimeout(() => {
-        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+        navigate("/login");
       }, 2000);
     } catch (err: any) {
       const errorMessage = err?.message || "Ошибка при регистрации";
